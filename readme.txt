@@ -1,4 +1,4 @@
-=== SportsPress Player Event Stats per Season ===
+=== Player Stats for SportsPress ===
 Contributors: savvasha
 Tags: sport, sports, players, statistics, stats, data, fixtures, results, standings, football, football club, soccer
 Requires at least: 5.3
@@ -7,7 +7,7 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Show the individual statistics of each event for a player per season.
+Show the individual stats and performances of each event for a player per season.
 
 == Description ==
 
