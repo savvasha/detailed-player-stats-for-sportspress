@@ -32,7 +32,7 @@ class Player_Stats_For_SportsPress {
 		$this->define_constants();
 		
 		// Hooks
-		//add_filter( 'sportspress_player_templates', array( $this, 'templates' ) );
+		add_filter( 'sportspress_player_templates', array( $this, 'templates' ) );
 		
 	}
 	
@@ -42,6 +42,38 @@ class Player_Stats_For_SportsPress {
 	private function define_constants() {
 		if ( !defined( 'PSFS_PLUGIN_BASE' ) )
 			define( 'PSFS_PLUGIN_BASE', plugin_basename( __FILE__ ) );
+		
+		if ( !defined( 'PSFS_PLUGIN_DIR' ) )
+			define( 'PSFS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+		
+		if ( !defined( 'PSFS_PLUGIN_URL' ) )
+			define( 'PSFS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+	}
+	
+	/**
+	 * Add templates to player layout.
+	 *
+	 * @return array
+	 */
+	public function templates( $templates = array() ) {
+		$templates['psfs_statistics'] = array(
+			'title' => __( 'Statistics (Advanced)', 'sportspress' ),
+			'option' => 'sportspress_player_show_psfs_statistics',
+			'action' => array( $this, 'output' ),
+			'default' => 'yes',
+		);
+		
+		return $templates;
+	}
+	
+	/**
+	 * Output Statistics (Advanced) template.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function output() {
+		sp_get_template( 'player-psfs-statistics.php', array(), '', PSFS_PLUGIN_DIR . 'templates/' );
 	}
 
 }
