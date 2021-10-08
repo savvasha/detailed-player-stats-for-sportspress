@@ -65,7 +65,7 @@ foreach( $data as $season_id => $row ):
 		if ( isset( $hide_teams ) && 'team' == $key )
 			continue;
 		if ( 'name' == $key ) {
-			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><a href="#TB_inline?&width=600&height=550&inlineId=player_events" class="thickbox"><button data-season_id="' . $season_id . '" data-league_id="' . $league_id . '" data-player_id="' . $player_id . '" data-team_id="' . $team_object->ID . '" data-nonce="' . $nonce . '" data-competition_name="' . $competition_name . '" class="player-season-stats">' . sp_array_value( $row, $key, '' ) . '</a></button></td>';
+			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><button data-season_id="' . $season_id . '" data-league_id="' . $league_id . '" data-player_id="' . $player_id . '" data-team_id="' . $team_object->ID . '" data-nonce="' . $nonce . '" data-competition_name="' . $competition_name . '" class="player-season-stats">' . sp_array_value( $row, $key, '' ) . '</button></td>';
 			//$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><a class="thickbox" href="' . $ajax_url . '"><button class="player-season-stats">' . sp_array_value( $row, $key, '' ) . '</button></a></td>';
 		}else{
 			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '">' . sp_array_value( $row, $key, '' ) . '</td>';
@@ -83,5 +83,5 @@ $output .= '</tbody>' . '</table>' . '</div>';
 <div class="sp-template sp-template-player-statistics">
 	<?php echo $output; ?>
 </div>
-<div id="player_events"><p>savvas</p></div>
+<div id="player_events" style="display:none;"></div>
 
