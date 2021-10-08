@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
 	$("button.player-season-stats").click(function() {
-		//alert('This alert is displayed');
+		
 		//alert($(this).data('competition_name'));
 		$( '#player_events' ).empty();
 		/*$('html, body').animate({
@@ -35,7 +35,7 @@ jQuery(document).ready(function($) {
 				//$('#loadingp').hide();
 				//$('#print_button_player_events').show();
 				$('#player_events').html( response );
-				tb_show(competition_name, '#TB_inline?&width=500&height=270&inlineId=player_events', false);
+				tb_show(competition_name, '#TB_inline?&width=450&height=270&inlineId=player_events&modal=true', false);
 			},
 			error : function (response){
 				//$('#loadingp').hide();
