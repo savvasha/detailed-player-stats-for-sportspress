@@ -5,7 +5,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-if ( 'no' === get_option( 'sportspress_player_show_statistics', 'yes' ) && 'no' === get_option( 'sportspress_player_show_total', 'no' ) ) return;
+if ( 'no' === get_option( 'sportspress_player_show_psfs_statistics', 'yes' ) && 'no' === get_option( 'sportspress_player_show_total', 'no' ) ) return;
 
 if ( ! isset( $id ) )
 	$id = get_the_ID();
@@ -17,11 +17,6 @@ $show_career_totals = 'yes' === get_option( 'sportspress_player_show_career_tota
 $sections = get_option( 'sportspress_player_performance_sections', -1 );
 $show_teams = apply_filters( 'sportspress_player_team_statistics', true );
 $leagues = array_filter( ( array ) get_the_terms( $id, 'sp_league' ) );
-
-//Load needed script file
-add_thickbox();
-wp_enqueue_script( 'player_season_matches_ajax', PSFS_PLUGIN_URL . 'assets/js/player-stats-for-sportspress.js', array( 'jquery' ) );
-wp_localize_script( 'player_season_matches_ajax', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php?lang='.get_bloginfo('language') ) ) );
 
 // Sort Leagues by User Defined Order (PHP5.2 supported)
 foreach ( $leagues as $key => $league ) {

@@ -7,12 +7,6 @@
 //Protection from certain types of misuse, malicious or otherwise of ajax callings
 $nonce = wp_create_nonce('player_psfs_statistics_league_ajax');
 
-//Load needed script file
-//add_thickbox();
-//wp_enqueue_script( 'player_season_matches_ajax', PSFS_PLUGIN_URL . 'assets/js/player-stats-for-sportspress.js', array( 'jquery' ) );
-
-//var_dump($GLOBALS['wp_scripts']->registered);
-
 // The first row should be column labels
 $labels = $data[0];
 
@@ -47,26 +41,11 @@ foreach( $data as $season_id => $row ):
 	$season_object = get_term_by( 'id', $season_id, 'sp_season' ); 
 	$competition_name = $league_object->name . ' ' . $season_object->name;
 	
-	$ajax_url = add_query_arg( 
-		array(
-			'TB_iframe' => 'true',
-			'nonce' => $nonce,
-			'action' => 'player_season_matches', 
-			'season_id' => $season_id, 
-			'league_id' => $league_id, 
-			'player_id' => $player_id, 
-			'team_id' => $team_object->ID, 
-			'competition_name' => $competition_name, 
-		), 
-		admin_url('admin-ajax.php')
-	);
-
 	foreach( $labels as $key => $value ):
 		if ( isset( $hide_teams ) && 'team' == $key )
 			continue;
 		if ( 'name' == $key ) {
 			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><button data-season_id="' . $season_id . '" data-league_id="' . $league_id . '" data-player_id="' . $player_id . '" data-team_id="' . $team_object->ID . '" data-nonce="' . $nonce . '" data-competition_name="' . $competition_name . '" class="player-season-stats">' . sp_array_value( $row, $key, '' ) . '</button></td>';
-			//$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><a class="thickbox" href="' . $ajax_url . '"><button class="player-season-stats">' . sp_array_value( $row, $key, '' ) . '</button></a></td>';
 		}else{
 			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '">' . sp_array_value( $row, $key, '' ) . '</td>';
 		}

@@ -31,6 +31,9 @@ class Player_Stats_For_SportsPress {
 		// Define constants
 		$this->define_constants();
 		
+		// Include required files
+		$this->includes();
+		
 		// Hooks
 		add_action( 'wp_ajax_player_season_matches', array( $this, 'player_season_matches' ) );
 		add_action( 'wp_ajax_nopriv_player_season_matches', array( $this, 'player_season_matches' ) );//for users that are not logged in.
@@ -51,6 +54,14 @@ class Player_Stats_For_SportsPress {
 		
 		if ( !defined( 'PSFS_PLUGIN_URL' ) )
 			define( 'PSFS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+	}
+	
+	/**
+	 * Include required files
+	*/
+	private function includes() {
+			//load the needed scripts and styles
+			include( PSFS_PLUGIN_DIR . '/includes/class-psfs-scripts.php' );
 	}
 	
 	/**
