@@ -18,6 +18,11 @@ $sections = get_option( 'sportspress_player_performance_sections', -1 );
 $show_teams = apply_filters( 'sportspress_player_team_statistics', true );
 $leagues = array_filter( ( array ) get_the_terms( $id, 'sp_league' ) );
 
+//Load needed script file
+add_thickbox();
+wp_enqueue_script( 'player_season_matches_ajax', PSFS_PLUGIN_URL . 'assets/js/player-stats-for-sportspress.js', array( 'jquery' ) );
+wp_localize_script( 'player_season_matches_ajax', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php?lang='.get_bloginfo('language') ) ) );
+
 // Sort Leagues by User Defined Order (PHP5.2 supported)
 foreach ( $leagues as $key => $league ) {
 	$leagues[ $key ]->sp_order = get_term_meta ( $league->term_id , 'sp_order', true );
@@ -69,6 +74,7 @@ if ( is_array( $leagues ) ):
 				'caption' => $caption,
 				'scrollable' => $scrollable,
 				'league_id' => $league->term_id,
+				'player_id' => $id,
 			);
 			if ( ! $show_teams ) {
 				$args['hide_teams'] = true;

@@ -32,6 +32,9 @@ class Player_Stats_For_SportsPress {
 		$this->define_constants();
 		
 		// Hooks
+		add_action( 'wp_ajax_player_season_matches', array( $this, 'player_season_matches' ) );
+		add_action( 'wp_ajax_nopriv_player_season_matches', array( $this, 'player_season_matches' ) );//for users that are not logged in.
+		
 		add_filter( 'sportspress_player_templates', array( $this, 'templates' ) );
 		
 	}
@@ -74,6 +77,42 @@ class Player_Stats_For_SportsPress {
 	 */
 	public function output() {
 		sp_get_template( 'player-psfs-statistics.php', array(), '', PSFS_PLUGIN_DIR . 'templates/' );
+	}
+	
+	/**
+	 * Output and a player specific event list.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function player_season_matches() {
+		if ( !wp_verify_nonce( $_REQUEST['nonce'], 'player_psfs_statistics_league_ajax')) {
+			exit("Επιλέξτε μια σαιζόν για να εμφανιστούν οι αγωνιστικές υποχρεώσεις του ποδοσφαιριστή...");
+		}
+		if( isset( $_REQUEST['player_id'] ) ) {
+			$this->competition_name = esc_attr( $_REQUEST['competition_name'] );
+			$this->league_id = intval( $_REQUEST['league_id'] );
+			$this->season_id = intval( $_REQUEST['season_id'] );
+			$this->team_id = intval( $_REQUEST['team_id'] );
+			$this->player_id = intval( $_REQUEST['player_id'] );
+			
+			$args = array(
+				'player' => $this->player_id,
+				'league' => $this->league_id,
+				'season' => $this->season_id,
+				'team' => $this->team_id,
+				'title' => $this->competition_name,
+				'title_format' => 'homeaway',
+				'time_format' => 'combined',
+				'columns' => array( 'event', 'time', 'results' ),
+				'order' => 'ASC',
+			);
+			//add_action( 'sportspress_event_list_head_row', array( $this, 'player_stats_head_row' ), 20 );
+			//add_action( 'sportspress_event_list_row', array( $this, 'player_stats_body_row' ), 20, 2 );
+			sp_get_template( 'event-list.php', $args );
+
+			wp_die();
+		}
 	}
 
 }
