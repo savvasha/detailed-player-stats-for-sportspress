@@ -33,6 +33,8 @@ class PSFS_Scripts {
 			wp_enqueue_script( 'player_season_matches_ajax', PSFS_PLUGIN_URL . 'assets/js/player-stats-for-sportspress.js', array( 'jquery' ) );
 			wp_localize_script( 'player_season_matches_ajax', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php?lang='.get_bloginfo('language') ) ) );
 			
+			//Some css code
+			wp_enqueue_style( 'player_season_matches_ajax',  PSFS_PLUGIN_URL . '/assets/css/player-stats-for-sportspress.css' );
 			
 		}
 		
