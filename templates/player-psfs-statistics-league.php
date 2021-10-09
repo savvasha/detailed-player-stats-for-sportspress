@@ -62,5 +62,4 @@ $output .= '</tbody>' . '</table>' . '</div>';
 <div class="sp-template sp-template-player-statistics">
 	<?php echo $output; ?>
 </div>
-<div id="player_events" style="display:none;"></div>
 

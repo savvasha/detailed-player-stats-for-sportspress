@@ -86,4 +86,6 @@ if ( is_array( $leagues ) ):
 			), '', PSFS_PLUGIN_DIR . 'templates/' );
 		}
 	}
-endif;
+endif; ?>
+<div id="player_events" style="display:none;"></div>
+

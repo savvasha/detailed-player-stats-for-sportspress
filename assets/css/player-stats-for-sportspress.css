@@ -12,3 +12,7 @@
     max-width: 100%;
     box-sizing: border-box;
 }
+
+#TB_ajaxContent .sp-template {
+    margin-top: 1.25em;
+}

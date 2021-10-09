@@ -35,7 +35,7 @@ jQuery(document).ready(function($) {
 				//$('#loadingp').hide();
 				//$('#print_button_player_events').show();
 				$('#player_events').html( response );
-				tb_show(competition_name, '#TB_inline?&width=450&height=270&inlineId=player_events', false);
+				tb_show(competition_name, '#TB_inline?&width=640&height=300&inlineId=player_events', false);
 			},
 			error : function (response){
 				//$('#loadingp').hide();
