@@ -6,7 +6,7 @@
  * @author Savvas
  */
  
-class PSFS_Scripts {
+class DPSFS_Scripts {
 
 	/**
 	 * Constructor
@@ -43,4 +43,4 @@ class PSFS_Scripts {
 	
 }
 
-new PSFS_Scripts();
+new DPSFS_Scripts();
