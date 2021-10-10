@@ -24,7 +24,8 @@ class PSFS_Scripts {
 	 * @return void
 	 */
 	public function psfs_adding_scripts() {
-		if ( is_singular('sp_player') ) {
+		global $post;
+		if ( is_singular('sp_player') || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'player_statistics') ) ) {
 			
 			//Include thickbox libraries
 			add_thickbox();

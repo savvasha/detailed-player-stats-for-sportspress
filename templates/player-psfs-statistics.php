@@ -5,7 +5,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-if ( 'no' === get_option( 'sportspress_player_show_psfs_statistics', 'yes' ) && 'no' === get_option( 'sportspress_player_show_total', 'no' ) ) return;
+if ( 'no' === get_option( 'sportspress_player_show_statistics', 'yes' ) && 'no' === get_option( 'sportspress_player_show_total', 'no' ) ) return;
 
 if ( ! isset( $id ) )
 	$id = get_the_ID();

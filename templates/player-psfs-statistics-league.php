@@ -45,7 +45,7 @@ foreach( $data as $season_id => $row ):
 		if ( isset( $hide_teams ) && 'team' == $key )
 			continue;
 		if ( 'name' == $key ) {
-			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><button data-season_id="' . $season_id . '" data-league_id="' . $league_id . '" data-player_id="' . $player_id . '" data-team_id="' . $team_object->ID . '" data-nonce="' . $nonce . '" data-competition_name="' . $competition_name . '" class="player-season-stats">' . sp_array_value( $row, $key, '' ) . '</button></td>';
+			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><button data-season_id="' . $season_id . '" data-league_id="' . $league_id . '" data-player_id="' . $player_id . '" data-team_id="' . $team_object->ID . '" data-nonce="' . $nonce . '" data-competition_name="' . $competition_name . '" data-player_name="' . esc_html( get_the_title( $player_id ) ) . '" class="player-season-stats">' . sp_array_value( $row, $key, '' ) . '</button></td>';
 		}else{
 			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '">' . sp_array_value( $row, $key, '' ) . '</td>';
 		}
@@ -60,6 +60,6 @@ endforeach;
 $output .= '</tbody>' . '</table>' . '</div>';
 ?>
 <div class="sp-template sp-template-player-statistics">
-	<?php echo $output; ?>
+	<?php echo wp_kses_post( $output ); ?>
 </div>
 

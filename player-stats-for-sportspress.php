@@ -39,8 +39,10 @@ class Player_Stats_For_SportsPress {
 		add_action( 'wp_ajax_nopriv_player_season_matches', array( $this, 'player_season_matches' ) );//for users that are not logged in.
 		
 		add_filter( 'sportspress_player_templates', array( $this, 'templates' ) );
+		add_filter( 'sportspress_locate_template', array( $this, 'shortcode_override' ), 10, 3 );
 		
 	}
+	
 	
 	/**
 	 * Define constants
@@ -70,14 +72,30 @@ class Player_Stats_For_SportsPress {
 	 * @return array
 	 */
 	public function templates( $templates = array() ) {
-		$templates['psfs_statistics'] = array(
+		$templates['statistics'] = array(
 			'title' => __( 'Statistics (Advanced)', 'sportspress' ),
-			'option' => 'sportspress_player_show_psfs_statistics',
+			'option' => 'sportspress_player_show_statistics',
 			'action' => array( $this, 'output' ),
 			'default' => 'yes',
 		);
 		
 		return $templates;
+	}
+	
+	/**
+	 * Shortcode override
+	 *
+	 * @return string
+	 */
+	function shortcode_override( $template = null, $template_name = null, $template_path = null ) {
+		
+		if ( 'player-statistics.php' === $template_name ) {
+			$template_name = 'player-psfs-statistics.php';
+			$template_path = PSFS_PLUGIN_DIR . 'templates/';
+			$template = $template_path . $template_name;
+		}
+
+		return $template;
 	}
 	
 	/**
@@ -112,7 +130,7 @@ class Player_Stats_For_SportsPress {
 				'league' => $this->league_id,
 				'season' => $this->season_id,
 				'team' => $this->team_id,
-				//'title' => $this->competition_name,
+				'title' => $this->competition_name,
 				'title_format' => 'homeaway',
 				'time_format' => 'combined',
 				'columns' => array( 'event', 'time', 'results' ),
