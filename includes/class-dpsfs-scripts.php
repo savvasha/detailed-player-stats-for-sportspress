@@ -2,7 +2,7 @@
 
 /**
  * Scripts functionality
- * @package Player Stats for SportsPress
+ * @package Detailed Player Stats for SportsPress
  * @author Savvas
  */
  
@@ -31,11 +31,11 @@ class DPSFS_Scripts {
 			add_thickbox();
 			
 			//Needed for the ajaxify
-			wp_enqueue_script( 'player_season_matches_ajax', DPSFS_PLUGIN_URL . 'assets/js/player-stats-for-sportspress.js', array( 'jquery' ) );
+			wp_enqueue_script( 'player_season_matches_ajax', DPSFS_PLUGIN_URL . 'assets/js/front.js', array( 'jquery' ) );
 			wp_localize_script( 'player_season_matches_ajax', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php?lang='.get_bloginfo('language') ) ) );
 			
 			//Some css code
-			wp_enqueue_style( 'player_season_matches_ajax',  DPSFS_PLUGIN_URL . '/assets/css/player-stats-for-sportspress.css' );
+			wp_enqueue_style( 'player_season_matches_ajax',  DPSFS_PLUGIN_URL . '/assets/css/front.css' );
 			
 		}
 		
