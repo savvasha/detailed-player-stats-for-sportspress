@@ -38,7 +38,6 @@ class Player_Stats_For_SportsPress {
 		add_action( 'wp_ajax_player_season_matches', array( $this, 'player_season_matches' ) );
 		add_action( 'wp_ajax_nopriv_player_season_matches', array( $this, 'player_season_matches' ) );//for users that are not logged in.
 		
-		add_filter( 'sportspress_player_templates', array( $this, 'templates' ) );
 		add_filter( 'sportspress_locate_template', array( $this, 'shortcode_override' ), 10, 3 );
 		
 	}
@@ -67,22 +66,6 @@ class Player_Stats_For_SportsPress {
 	}
 	
 	/**
-	 * Add templates to player layout.
-	 *
-	 * @return array
-	 */
-	public function templates( $templates = array() ) {
-		$templates['statistics'] = array(
-			'title' => __( 'Statistics (Advanced)', 'sportspress' ),
-			'option' => 'sportspress_player_show_statistics',
-			'action' => array( $this, 'output' ),
-			'default' => 'yes',
-		);
-		
-		return $templates;
-	}
-	
-	/**
 	 * Shortcode override
 	 *
 	 * @return string
@@ -96,16 +79,6 @@ class Player_Stats_For_SportsPress {
 		}
 
 		return $template;
-	}
-	
-	/**
-	 * Output Statistics (Advanced) template.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function output() {
-		sp_get_template( 'player-psfs-statistics.php', array(), '', PSFS_PLUGIN_DIR . 'templates/' );
 	}
 	
 	/**

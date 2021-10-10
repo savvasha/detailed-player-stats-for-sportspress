@@ -1,6 +1,6 @@
 === Player Stats for SportsPress ===
 Contributors: savvasha
-Tags: sport, sports, players, statistics, stats, data, fixtures, results, standings, football, football club, soccer
+Tags: sport, sports, players, statistics, season, events, stats, data, fixtures, results, standings, football, football club, soccer
 Requires at least: 5.3
 Tested up to: 5.8.1
 Stable tag: 1.0.0

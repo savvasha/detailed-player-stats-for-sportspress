@@ -68,6 +68,7 @@ if ( is_array( $leagues ) ):
 				'data' => $player->data( $league->term_id, false, $section_id ),
 				'caption' => $caption,
 				'scrollable' => $scrollable,
+				'show_career_totals' => false,
 				'league_id' => $league->term_id,
 				'player_id' => $id,
 			);
@@ -83,6 +84,8 @@ if ( is_array( $leagues ) ):
 				'caption' => __( 'Career Total', 'sportspress' ),
 				'scrollable' => $scrollable,
 				'hide_teams' => true,
+				'show_career_totals' => true,
+				'player_id' => $id,
 			), '', PSFS_PLUGIN_DIR . 'templates/' );
 		}
 	}

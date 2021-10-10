@@ -35,17 +35,28 @@ foreach( $data as $season_id => $row ):
 
 	$output .= '<tr class="' . ( $i % 2 == 0 ? 'odd' : 'even' ) . '">';
 	
-	$team_object = get_page_by_title ( strip_tags( $row['team'] ), OBJECT, 'sp_team' );
+	//Get some more info
+	$competition_name = __( 'Career', 'sportspress' );
+	if ( -1 != $season_id )
+		$season_object = get_term_by( 'id', $season_id, 'sp_season' );
 	
-	$league_object = get_term_by( 'id', $league_id, 'sp_league' ); 
-	$season_object = get_term_by( 'id', $season_id, 'sp_season' ); 
+	if ( isset( $league_id ) )
+		$league_object = get_term_by( 'id', $league_id, 'sp_league' ); 
+	
+	if ( isset( $season_object ) && isset( $league_object ) )
+		$competition_name = $league_object->name . ' ' . $season_object->name;
+	
+	$team_id = null;
+	if ( -1 != $season_id && !$show_career_totals ) {
+		$team_object = get_page_by_title ( strip_tags( $row['team'] ), OBJECT, 'sp_team' );
+		$team_id = $team_object->ID;
+	}
 	
 	foreach( $labels as $key => $value ):
-		if ( isset( $hide_teams ) && 'team' == $key )
+		if ( 'name' == $key && -1 != $season_id && !$show_career_totals ) {
+			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><button data-season_id="' . $season_id . '" data-league_id="' . $league_id . '" data-player_id="' . $player_id . '" data-team_id="' . $team_id . '" data-nonce="' . $nonce . '" data-competition_name="' . $competition_name . '" data-player_name="' . esc_html( get_the_title( $player_id ) ) . '" class="player-season-stats">' . sp_array_value( $row, $key, '' ) . '</button></td>';
+		}elseif ( isset( $hide_teams ) && 'team' == $key ){
 			continue;
-		if ( 'name' == $key && '-1' != $season_id ) {
-			$competition_name = $league_object->name . ' ' . $season_object->name;
-			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><button data-season_id="' . $season_id . '" data-league_id="' . $league_id . '" data-player_id="' . $player_id . '" data-team_id="' . $team_object->ID . '" data-nonce="' . $nonce . '" data-competition_name="' . $competition_name . '" data-player_name="' . esc_html( get_the_title( $player_id ) ) . '" class="player-season-stats">' . sp_array_value( $row, $key, '' ) . '</button></td>';
 		}else{
 			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '">' . sp_array_value( $row, $key, '' ) . '</td>';
 		}
