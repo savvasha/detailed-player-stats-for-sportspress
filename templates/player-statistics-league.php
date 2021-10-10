@@ -5,7 +5,7 @@
  */
 
 //Protection from certain types of misuse, malicious or otherwise of ajax callings
-$nonce = wp_create_nonce('player_psfs_statistics_league_ajax');
+$nonce = wp_create_nonce('dpsfs_player_statistics_league_ajax');
 
 // The first row should be column labels
 $labels = $data[0];

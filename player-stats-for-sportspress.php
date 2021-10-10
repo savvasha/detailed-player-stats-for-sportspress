@@ -1,6 +1,6 @@
 <?php
 /**
-Plugin Name: Player Stats for SportsPress
+Plugin Name: Detailed Player Stats for SportsPress
 Description: An advanced player per season stats template.
 Author: Savvas
 Author URI: https://profiles.wordpress.org/savvasha/
@@ -17,12 +17,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 
 /**
- * Main Player Stats For SportsPress Class
+ * Main Detailed Player Stats For SportsPress Class
  *
- * @class Player_Stats_For_SportsPress
+ * @class Detailed_Player_Stats_For_SportsPress
  * @version	1.0.0
  */
-class Player_Stats_For_SportsPress {
+class Detailed_Player_Stats_For_SportsPress {
 
 	/**
 	 * Constructor.
@@ -47,14 +47,14 @@ class Player_Stats_For_SportsPress {
 	 * Define constants
 	*/
 	private function define_constants() {
-		if ( !defined( 'PSFS_PLUGIN_BASE' ) )
-			define( 'PSFS_PLUGIN_BASE', plugin_basename( __FILE__ ) );
+		if ( !defined( 'DPSFS_PLUGIN_BASE' ) )
+			define( 'DPSFS_PLUGIN_BASE', plugin_basename( __FILE__ ) );
 		
-		if ( !defined( 'PSFS_PLUGIN_DIR' ) )
-			define( 'PSFS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+		if ( !defined( 'DPSFS_PLUGIN_DIR' ) )
+			define( 'DPSFS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 		
-		if ( !defined( 'PSFS_PLUGIN_URL' ) )
-			define( 'PSFS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+		if ( !defined( 'DPSFS_PLUGIN_URL' ) )
+			define( 'DPSFS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 	}
 	
 	/**
@@ -62,7 +62,7 @@ class Player_Stats_For_SportsPress {
 	*/
 	private function includes() {
 			//load the needed scripts and styles
-			include( PSFS_PLUGIN_DIR . '/includes/class-psfs-scripts.php' );
+			include( DPSFS_PLUGIN_DIR . '/includes/class-dpsfs-scripts.php' );
 	}
 	
 	/**
@@ -73,8 +73,7 @@ class Player_Stats_For_SportsPress {
 	function shortcode_override( $template = null, $template_name = null, $template_path = null ) {
 		
 		if ( 'player-statistics.php' === $template_name ) {
-			$template_name = 'player-psfs-statistics.php';
-			$template_path = PSFS_PLUGIN_DIR . 'templates/';
+			$template_path = DPSFS_PLUGIN_DIR . 'templates/';
 			$template = $template_path . $template_name;
 		}
 
@@ -88,7 +87,7 @@ class Player_Stats_For_SportsPress {
 	 * @return void
 	 */
 	public function player_season_matches() {
-		if ( !wp_verify_nonce( $_REQUEST['nonce'], 'player_psfs_statistics_league_ajax')) {
+		if ( !wp_verify_nonce( $_REQUEST['nonce'], 'dpsfs_player_statistics_league_ajax')) {
 			exit("Something went wrong...");
 		}
 		if( isset( $_REQUEST['player_id'] ) ) {
@@ -272,4 +271,4 @@ class Player_Stats_For_SportsPress {
 
 endif;
 
-new Player_Stats_For_SportsPress();
+new Detailed_Player_Stats_For_SportsPress();
