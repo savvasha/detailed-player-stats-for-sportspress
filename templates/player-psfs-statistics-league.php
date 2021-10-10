@@ -39,12 +39,12 @@ foreach( $data as $season_id => $row ):
 	
 	$league_object = get_term_by( 'id', $league_id, 'sp_league' ); 
 	$season_object = get_term_by( 'id', $season_id, 'sp_season' ); 
-	$competition_name = $league_object->name . ' ' . $season_object->name;
 	
 	foreach( $labels as $key => $value ):
 		if ( isset( $hide_teams ) && 'team' == $key )
 			continue;
-		if ( 'name' == $key ) {
+		if ( 'name' == $key && '-1' != $season_id ) {
+			$competition_name = $league_object->name . ' ' . $season_object->name;
 			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><button data-season_id="' . $season_id . '" data-league_id="' . $league_id . '" data-player_id="' . $player_id . '" data-team_id="' . $team_object->ID . '" data-nonce="' . $nonce . '" data-competition_name="' . $competition_name . '" data-player_name="' . esc_html( get_the_title( $player_id ) ) . '" class="player-season-stats">' . sp_array_value( $row, $key, '' ) . '</button></td>';
 		}else{
 			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '">' . sp_array_value( $row, $key, '' ) . '</td>';
