@@ -91,7 +91,7 @@ class Detailed_Player_Stats_For_SportsPress {
 			exit("Something went wrong...");
 		}
 		if( isset( $_REQUEST['player_id'] ) ) {
-			$this->competition_name = esc_attr( $_REQUEST['competition_name'] );
+			$this->competition_name = sanitize_text_field( $_REQUEST['competition_name'] );
 			$this->league_id = intval( $_REQUEST['league_id'] );
 			$this->season_id = intval( $_REQUEST['season_id'] );
 			$this->team_id = intval( $_REQUEST['team_id'] );
