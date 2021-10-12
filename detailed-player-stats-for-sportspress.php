@@ -70,7 +70,7 @@ class Detailed_Player_Stats_For_SportsPress {
 	 *
 	 * @return string
 	 */
-	function shortcode_override( $template = null, $template_name = null, $template_path = null ) {
+	public function shortcode_override( $template = null, $template_name = null, $template_path = null ) {
 		
 		if ( 'player-statistics.php' === $template_name ) {
 			$template_path = DPSFS_PLUGIN_DIR . 'templates/';

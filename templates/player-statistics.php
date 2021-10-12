@@ -22,12 +22,11 @@ $leagues = array_filter( ( array ) get_the_terms( $id, 'sp_league' ) );
 foreach ( $leagues as $key => $league ) {
 	$leagues[ $key ]->sp_order = get_term_meta ( $league->term_id , 'sp_order', true );
 }
-if ( ! function_exists( 'sortByOrder' ) ) { 
-	function sortByOrder($a, $b) {
-		return (int) $a->sp_order - (int) $b->sp_order;
-	}
+
+function dpsfs_sortByOrder($a, $b) {
+	return (int) $a->sp_order - (int) $b->sp_order;
 }
-usort($leagues, 'sortByOrder');
+usort($leagues, 'dpsfs_sortByOrder');
 
 $positions = $player->positions();
 $player_sections = array();
