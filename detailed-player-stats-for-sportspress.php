@@ -4,7 +4,7 @@ Plugin Name: Detailed Player Stats for SportsPress
 Description: An advanced player per season stats template.
 Author: Savvas
 Author URI: https://profiles.wordpress.org/savvasha/
-Version: 1.0.1
+Version: 1.1.0
 Requires at least: 5.3
 Requires PHP: 7.2
 License: GPL v2 or later
@@ -20,7 +20,7 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
  * Main Detailed Player Stats For SportsPress Class
  *
  * @class Detailed_Player_Stats_For_SportsPress
- * @version	1.0.0
+ * @version	1.1.0
  */
 class Detailed_Player_Stats_For_SportsPress {
 
@@ -39,6 +39,7 @@ class Detailed_Player_Stats_For_SportsPress {
 		add_action( 'wp_ajax_nopriv_player_season_matches', array( $this, 'player_season_matches' ) );//for users that are not logged in.
 		
 		add_filter( 'sportspress_locate_template', array( $this, 'shortcode_override' ), 10, 3 );
+		add_filter( 'sportspress_player_settings', array( $this, 'add_settings' ) );
 		
 	}
 	
@@ -117,20 +118,26 @@ class Detailed_Player_Stats_For_SportsPress {
 	}
 	
 	public function player_stats_head_row( $usecolumns ) {
-		echo '<th class="data-stats">' . __( 'Performances', 'sportspress' ) . '</th>';
-		echo '<th class="data-minutes">' . __( 'Minutes', 'sportspress' ) . '</th>';
+		if ( 'yes' === get_option( 'dpsfs_show_performances', 'yes' ) )
+			echo '<th class="data-stats">' . __( 'Performances', 'sportspress' ) . '</th>';
+		
+		if ( 'yes' === get_option( 'dpsfs_show_minutes', 'yes' ) )
+			echo '<th class="data-minutes">' . __( 'Minutes', 'sportspress' ) . '</th>';
 	}
 	
 	public function player_stats_body_row( $event, $usecolumns ) {
-		echo '<td class="data-stats">';
-			$stats = $this->get_player_match_performance( (int)$this->player_id, $event->ID, $this->team_id );
-			echo wp_kses_post( $stats );
-		echo '</td>';
-		
-		echo '<td class="data-stats">';
-			$minutes = $this->get_player_match_minutes( (int)$this->player_id, $event->ID );
-			echo esc_attr( $minutes ) . '\'';
-		echo '</td>';
+		if ( 'yes' === get_option( 'dpsfs_show_performances', 'yes' ) ) {
+			echo '<td class="data-stats">';
+				$stats = $this->get_player_match_performance( (int)$this->player_id, $event->ID, $this->team_id );
+				echo wp_kses_post( $stats );
+			echo '</td>';
+		}
+		if ( 'yes' === get_option( 'dpsfs_show_minutes', 'yes' ) ) {
+			echo '<td class="data-stats">';
+				$minutes = $this->get_player_match_minutes( (int)$this->player_id, $event->ID );
+				echo esc_attr( $minutes ) . '\'';
+			echo '</td>';
+		}
 	}
 	
 	private function get_player_match_performance( $player_id, $match_id = null, $team_id = null ) {
@@ -265,6 +272,44 @@ class Detailed_Player_Stats_For_SportsPress {
 			
 		}
 		return $played_minutes;
+	}
+	
+	/**
+	 * Add settings.
+	 *
+	 * @return array
+	 */
+	public function add_settings( $settings ) {
+		
+		$settings = array_merge( $settings,
+			array(
+				array( 'title' => __( 'Detailed Statistics', 'detailed-player-statistics-for-sportspress' ), 'type' => 'title', 'id' => 'dpsfs_detailed_stats_options' ),
+			),
+
+			apply_filters( 'dpsfs_detailed_stats_options', array(
+				array(
+					'title' 	=> __( 'Display', 'detailed-player-statistics-for-sportspress' ),
+					'desc' 		=> __( 'Performances', 'sportspress' ),
+					'id' 		=> 'dpsfs_show_performances',
+					'default'	=> 'yes',
+					'type' 		=> 'checkbox',
+					'checkboxgroup'		=> 'start',
+				),
+
+				array(
+					'desc' 		=> __( 'Minutes', 'sportspress' ),
+					'id' 		=> 'dpsfs_show_minutes',
+					'default'	=> 'yes',
+					'type' 		=> 'checkbox',
+					'checkboxgroup'		=> 'end',
+				),
+			) ),
+
+			array(
+				array( 'type' => 'sectionend', 'id' => 'dpsfs_detailed_stats_options' ),
+			)
+		);
+		return $settings;
 	}
 
 }
