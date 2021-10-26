@@ -7,6 +7,9 @@
 //Protection from certain types of misuse, malicious or otherwise of ajax callings
 $nonce = wp_create_nonce('dpsfs_player_statistics_league_ajax');
 
+//Get the detailed stats mode from settings
+$mode = get_option( 'dpsfs_player_statistics_mode', 'popup' );
+
 // The first row should be column labels
 $labels = $data[0];
 
@@ -54,7 +57,7 @@ foreach( $data as $season_id => $row ):
 	
 	foreach( $labels as $key => $value ):
 		if ( 'name' == $key && -1 != $season_id && !$show_career_totals ) {
-			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><button data-season_id="' . $season_id . '" data-league_id="' . $league_id . '" data-player_id="' . $player_id . '" data-team_id="' . $team_id . '" data-nonce="' . $nonce . '" data-competition_name="' . $competition_name . '" data-player_name="' . esc_html( get_the_title( $player_id ) ) . '" class="player-season-stats">' . sp_array_value( $row, $key, '' ) . '</button></td>';
+			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><button data-season_id="' . $season_id . '" data-league_id="' . $league_id . '" data-player_id="' . $player_id . '" data-team_id="' . $team_id . '" data-nonce="' . $nonce . '" data-competition_name="' . $competition_name . '" data-player_name="' . esc_html( get_the_title( $player_id ) ) . '" class="player-season-stats-' . $mode . '">' . sp_array_value( $row, $key, '' ) . '</button></td>';
 		}elseif ( isset( $hide_teams ) && 'team' == $key ){
 			continue;
 		}else{
