@@ -75,5 +75,7 @@ $output .= '</tbody>' . '</table>' . '</div>';
 ?>
 <div class="sp-template sp-template-player-statistics">
 	<?php echo wp_kses_post( $output ); ?>
+	<center><span id="loading_<?php echo $league_id; ?>" style="display:none;" class="color:blue; dashicons spin dashicons-update-alt"></span></center>
+	<div class="player_events_inline" id="player_events_inline_<?php echo $league_id; ?>" style="display:none;"></div>
 </div>
 

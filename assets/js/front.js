@@ -45,7 +45,10 @@ jQuery(document).ready(function($) {
 		var nonce = $(this).data('nonce');
 		
 		//Confirm that div#player_events is empty
-		$( '#player_events_'+league_id ).empty();
+		$( '#player_events_inline_'+league_id ).empty();
+		
+		//Show the loading circle
+		$( '#loading_'+league_id ).show();
 		
 		//Call player_season_matches() function and return the response to div#player_events and from there to thickbox
 		var ajax_call = $.ajax({
@@ -61,7 +64,9 @@ jQuery(document).ready(function($) {
 				nonce: nonce
 			},
 			success : function( response ) {
-				$( '#player_events_'+league_id ).html( response );
+				$( '#loading_'+league_id ).hide();
+				$( '#player_events_inline_'+league_id ).show();
+				$( '#player_events_inline_'+league_id ).html( '&nbsp;'+response );
 			},
 			error : function (response){
 			}
