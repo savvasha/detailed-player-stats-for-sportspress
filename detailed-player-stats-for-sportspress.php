@@ -288,7 +288,17 @@ class Detailed_Player_Stats_For_SportsPress {
 
 			apply_filters( 'dpsfs_detailed_stats_options', array(
 				array(
-					'title' 	=> __( 'Display', 'detailed-player-statistics-for-sportspress' ),
+					'title' 	=> __( 'Mode', 'sportspress' ),
+					'id' 		=> 'dpsfs_player_statistics_mode',
+					'default'	=> 'popup',
+					'type' 		=> 'radio',
+					'options' => array(
+						'popup'	=> __( 'Popup (thickbox)', 'sportspress' ),
+						'inline'		=> __( 'Inline', 'sportspress' ),
+					),
+				),
+				array(
+					'title' 	=> __( 'Display', 'sportspress' ),
 					'desc' 		=> __( 'Performances', 'sportspress' ),
 					'id' 		=> 'dpsfs_show_performances',
 					'default'	=> 'yes',
