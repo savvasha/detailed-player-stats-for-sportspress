@@ -4,7 +4,7 @@ Plugin Name: Detailed Player Stats for SportsPress
 Description: An advanced player per season stats template.
 Author: Savvas
 Author URI: https://profiles.wordpress.org/savvasha/
-Version: 1.1.0
+Version: 1.1.1
 Requires at least: 5.3
 Requires PHP: 7.2
 License: GPL v2 or later
@@ -20,7 +20,7 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
  * Main Detailed Player Stats For SportsPress Class
  *
  * @class Detailed_Player_Stats_For_SportsPress
- * @version	1.1.0
+ * @version	1.1.1
  */
 class Detailed_Player_Stats_For_SportsPress {
 
@@ -151,12 +151,16 @@ class Detailed_Player_Stats_For_SportsPress {
 			if ( $tplayer_id == $player_id ) {
 				foreach ( $performances as $key => $times ) {
 					if ( in_array( $key, array( 'sub', 'status', 'number', 'position' ) ) ) continue;
-					
+					$performance_id = 0;
 					if ( $post = get_page_by_path( $key, OBJECT, 'sp_performance' ) ) {
 						$performance_id = $post->ID;
 					}
 					$icon = '';
-					$icon = apply_filters( 'sportspress_event_performance_icons', $icon, $performance_id, 1 );
+					if ( $performance_id && has_post_thumbnail( $performance_id ) ) {
+						$icon = get_the_post_thumbnail( $performance_id, 'sportspress-fit-mini', array( 'title' => sp_get_singular_name( $performance_id ) ) );
+					}else{
+						$icon = apply_filters( 'sportspress_event_performance_icons', $icon, $performance_id, 1 );
+					}
 
 					$player_match_performance .= str_repeat( $icon, (int)$times );
 				}
