@@ -79,6 +79,7 @@ $output .= '</tbody>' . '</table>' . '</div>';
 <div class="sp-template sp-template-player-statistics">
 	<?php echo wp_kses_post( $output ); ?>
 	<center><span id="loading_<?php echo esc_attr( $league_id ); ?>" style="display:none;" class="color:blue; dashicons spin dashicons-update-alt"></span></center>
+	<a href="#" title="Close Table" id="player_events_inline_close_<?php echo esc_attr( $league_id ); ?>" class="dashicons dashicons-dismiss" style="display:none; float:right; color:red;"></a>
 	<div class="player_events_inline" id="player_events_inline_<?php echo esc_attr( $league_id ); ?>" style="display:none;"></div>
 </div>
 
