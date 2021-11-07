@@ -4,7 +4,7 @@ Plugin Name: Detailed Player Stats for SportsPress
 Description: An advanced player per season stats template.
 Author: Savvas
 Author URI: https://profiles.wordpress.org/savvasha/
-Version: 1.1.1
+Version: 1.2.0
 Requires at least: 5.3
 Requires PHP: 7.2
 License: GPL v2 or later
@@ -20,7 +20,7 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
  * Main Detailed Player Stats For SportsPress Class
  *
  * @class Detailed_Player_Stats_For_SportsPress
- * @version	1.1.1
+ * @version	1.2.0
  */
 class Detailed_Player_Stats_For_SportsPress {
 	
