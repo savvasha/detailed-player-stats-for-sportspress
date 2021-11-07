@@ -43,10 +43,13 @@ foreach( $data as $season_id => $row ):
 	if ( -1 != $season_id )
 		$season_object = get_term_by( 'id', $season_id, 'sp_season' );
 	
-	if ( isset( $league_id ) )
-		$league_object = get_term_by( 'id', $league_id, 'sp_league' ); 
+	if ( isset( $league_id ) ) {
+		$league_object = get_term_by( 'id', $league_id, 'sp_league' );
+	}else{
+		$league_id = 0;
+	}		
 	
-	if ( isset( $season_object ) && isset( $league_object ) )
+	if ( isset( $season_object ) && isset( $league_object ) && !$show_career_totals )
 		$competition_name = $league_object->name . ' ' . $season_object->name;
 	
 	$team_id = null;
