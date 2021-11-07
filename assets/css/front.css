@@ -30,3 +30,11 @@
 		transform: rotate( 360deg );
 	}
 }
+
+.player-details-close-button {
+	position: relative;
+    color: red;
+    top: 45px;
+    float:right;
+	z-index: 99999;
+}

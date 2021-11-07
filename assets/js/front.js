@@ -66,11 +66,9 @@ jQuery(document).ready(function($) {
 			success : function( response ) {
 				$( '#loading_'+league_id ).hide();
 				$( '#player_events_inline_'+league_id ).show();
-				$( '#player_events_inline_close_'+league_id ).show();
-				$( '#player_events_inline_'+league_id ).html( '&nbsp;'+response );
-				$( '#player_events_inline_close_'+league_id ).click(function() {
+				$( '#player_events_inline_'+league_id ).html( '&nbsp;'+'<a href="#" title="Close Table" id="#player_events_inline_close" class="dashicons dashicons-dismiss player-details-close-button"></a>'+response );
+				$( '.player-details-close-button' ).click(function() {
 					$( '#player_events_inline_'+league_id ).empty();
-					$( '#player_events_inline_close_'+league_id ).hide();
 				});
 			},
 			error : function (response){
