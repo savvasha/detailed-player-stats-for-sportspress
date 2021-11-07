@@ -23,11 +23,17 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
  * @version	1.1.1
  */
 class Detailed_Player_Stats_For_SportsPress {
+	
+	/** @var string The plugins mode. */
+	public static $mode;
 
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
+		
+		self::$mode = get_option( 'dpsfs_player_statistics_mode', 'popup' );
+		
 		// Define constants
 		$this->define_constants();
 		
@@ -98,12 +104,18 @@ class Detailed_Player_Stats_For_SportsPress {
 			$this->team_id = intval( $_REQUEST['team_id'] );
 			$this->player_id = intval( $_REQUEST['player_id'] );
 			
+			if ( 'inline' == self::$mode ) {
+				$title = get_the_title( $this->player_id ) . ' @ ' . $this->competition_name;
+			}else{
+				$title = $this->competition_name;
+			}
+			
 			$args = array(
 				'player' => $this->player_id,
 				'league' => $this->league_id,
 				'season' => $this->season_id,
 				'team' => $this->team_id,
-				'title' => $this->competition_name,
+				'title' => $title,
 				'title_format' => 'homeaway',
 				'time_format' => 'combined',
 				'columns' => array( 'event', 'time', 'results' ),
