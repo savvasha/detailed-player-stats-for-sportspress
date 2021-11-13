@@ -34,6 +34,8 @@ $output .= '</tr>' . '</thead>' . '<tbody>';
 
 $i = 0;
 
+$player_assignments = get_post_meta ( $player_id, 'sp_assignments', false);
+
 foreach( $data as $season_id => $row ):
 
 	$output .= '<tr class="' . ( $i % 2 == 0 ? 'odd' : 'even' ) . '">';
@@ -54,8 +56,18 @@ foreach( $data as $season_id => $row ):
 	
 	$team_id = null;
 	if ( -1 != $season_id && !$show_career_totals ) {
-		$team_object = get_page_by_title ( strip_tags( $row['team'] ), OBJECT, 'sp_team' );
-		$team_id = $team_object->ID;
+		if ( $player_assignments ) {
+			$search_text = $league_id . '_' . $season_id  . '_';
+			$matches = array_filter( $player_assignments, function( $el ) use ( $search_text ) {
+				return ( strpos( $el, $search_text ) !== false );
+			});
+			if ( !empty( $matches ) ){
+				$team_id = (int) explode( $search_text, reset( $matches ) )[1];
+			}
+		}else{
+			$team_object = get_page_by_title ( strip_tags( $row['team'] ), OBJECT, 'sp_team' );
+			$team_id = $team_object->ID;
+		}
 	}
 	
 	foreach( $labels as $key => $value ):
