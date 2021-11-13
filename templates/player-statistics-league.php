@@ -34,7 +34,7 @@ $output .= '</tr>' . '</thead>' . '<tbody>';
 
 $i = 0;
 
-$player_assignments = get_post_meta ( $player_id, 'sp_assignments', false);
+$player_assignments = get_post_meta ( $player_id, 'sp_assignments', false );
 
 foreach( $data as $season_id => $row ):
 
