@@ -33,6 +33,10 @@ This plugin is an extension for [SportsPress](https://wordpress.org/plugins/spor
 
 == Changelog ==
 
+= 1.2.2 =
+
+* Tweak: Changes based on phpcfs and WP coding standards.
+
 = 1.2.1 =
 
 * FIX: Performances not shown when a shortname is set for the team.
