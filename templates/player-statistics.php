@@ -2,33 +2,43 @@
 /**
  * Player Statistics (Advanced) template
  * This template is modified copy from sportspress/templates/player-statistics.php
+ *
+ * @author      ThemeBoy & savvasha
+ * @package     detailed-player-stats-for-sportspress/templates
+ * @version   2.6.1
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-if ( 'no' === get_option( 'sportspress_player_show_statistics', 'yes' ) && 'no' === get_option( 'sportspress_player_show_total', 'no' ) ) return;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+if ( 'no' === get_option( 'sportspress_player_show_statistics', 'yes' ) && 'no' === get_option( 'sportspress_player_show_total', 'no' ) ) {
+	return;
+}
 
-if ( ! isset( $id ) )
+if ( ! isset( $id ) ) {
 	$id = get_the_ID();
+}
 
 $player = new SP_Player( $id );
 
-$scrollable = get_option( 'sportspress_enable_scrollable_tables', 'yes' ) == 'yes' ? true : false;
+$scrollable         = get_option( 'sportspress_enable_scrollable_tables', 'yes' ) === 'yes' ? true : false;
 $show_career_totals = 'yes' === get_option( 'sportspress_player_show_career_total', 'no' ) ? true : false;
-$sections = get_option( 'sportspress_player_performance_sections', -1 );
-$show_teams = apply_filters( 'sportspress_player_team_statistics', true );
-$leagues = array_filter( ( array ) get_the_terms( $id, 'sp_league' ) );
+$sections           = get_option( 'sportspress_player_performance_sections', -1 );
+$show_teams         = apply_filters( 'sportspress_player_team_statistics', true );
+$leagues            = array_filter( (array) get_the_terms( $id, 'sp_league' ) );
 
-// Sort Leagues by User Defined Order (PHP5.2 supported)
+// Sort Leagues by User Defined Order (PHP5.2 supported).
 foreach ( $leagues as $key => $league ) {
-	$leagues[ $key ]->sp_order = get_term_meta ( $league->term_id , 'sp_order', true );
+	$leagues[ $key ]->sp_order = get_term_meta( $league->term_id, 'sp_order', true );
 }
 
-function dpsfs_sortByOrder($a, $b) {
+// Make the sorting of leagues based on "order" values set by user.
+function dpsfs_sort_by_order( $a, $b ) {
 	return (int) $a->sp_order - (int) $b->sp_order;
 }
-usort($leagues, 'dpsfs_sortByOrder');
+usort( $leagues, 'dpsfs_sort_by_order' );
 
-$positions = $player->positions();
+$positions       = $player->positions();
 $player_sections = array();
 if ( $positions ) {
 	foreach ( $positions as $position ) {
@@ -36,40 +46,44 @@ if ( $positions ) {
 	}
 }
 
-// Determine order of sections
-if ( 1 == $sections ) {
-	$section_order = array( 1 => __( 'Defense', 'sportspress' ), 0 => __( 'Offense', 'sportspress' ) );
-} elseif ( 0 == $sections ) {
+// Determine order of sections.
+if ( 1 === $sections ) {
+	$section_order = array(
+		1 => __( 'Defense', 'sportspress' ),
+		0 => __( 'Offense', 'sportspress' ),
+	);
+} elseif ( 0 === $sections ) {
 	$section_order = array( __( 'Offense', 'sportspress' ), __( 'Defense', 'sportspress' ) );
 } else {
 	$section_order = array( -1 => null );
 }
 
-// Loop through statistics for each league
-if ( is_array( $leagues ) ):
+if ( is_array( $leagues ) ) :
 	foreach ( $section_order as $section_id => $section_label ) {
-		if ( -1 !== $section_id && ! empty( $player_sections ) && ! in_array( $section_id, $player_sections ) ) continue;
-		
-		if ( sizeof( $leagues ) > 1 ) {
-			printf( '<h3 class="sp-post-caption sp-player-statistics-section">%s</h3>', $section_label );
+		if ( -1 !== $section_id && ! empty( $player_sections ) && ! in_array( $section_id, $player_sections ) ) {
+			continue;
 		}
-		
-		foreach ( $leagues as $league ):
+
+		if ( count( $leagues ) > 1 ) {
+			printf( '<h3 class="sp-post-caption sp-player-statistics-section">%s</h3>', wp_kses_post( $section_label ) );
+		}
+
+		foreach ( $leagues as $league ) :
 			$caption = $league->name;
-		
+
 			if ( null !== $section_label ) {
-				if ( sizeof( $leagues ) === 1 ) {
+				if ( count( $leagues ) === 1 ) {
 					$caption = $section_label;
 				}
 			}
 
 			$args = array(
-				'data' => $player->data( $league->term_id, false, $section_id ),
-				'caption' => $caption,
-				'scrollable' => $scrollable,
+				'data'               => $player->data( $league->term_id, false, $section_id ),
+				'caption'            => $caption,
+				'scrollable'         => $scrollable,
 				'show_career_totals' => false,
-				'league_id' => $league->term_id,
-				'player_id' => $id,
+				'league_id'          => $league->term_id,
+				'player_id'          => $id,
 			);
 			if ( ! $show_teams ) {
 				$args['hide_teams'] = true;
@@ -78,14 +92,19 @@ if ( is_array( $leagues ) ):
 		endforeach;
 
 		if ( $show_career_totals ) {
-			sp_get_template( 'player-statistics-league.php', array(
-				'data' => $player->data( 0, false, $section_id ),
-				'caption' => __( 'Career Total', 'sportspress' ),
-				'scrollable' => $scrollable,
-				'hide_teams' => true,
-				'show_career_totals' => true,
-				'player_id' => $id,
-			), '', DPSFS_PLUGIN_DIR . 'templates/' );
+			sp_get_template(
+				'player-statistics-league.php',
+				array(
+					'data'               => $player->data( 0, false, $section_id ),
+					'caption'            => __( 'Career Total', 'sportspress' ),
+					'scrollable'         => $scrollable,
+					'hide_teams'         => true,
+					'show_career_totals' => true,
+					'player_id'          => $id,
+				),
+				'',
+				DPSFS_PLUGIN_DIR . 'templates/'
+			);
 		}
 	}
 endif; ?>
