@@ -1,17 +1,21 @@
 <?php
 /**
-Plugin Name: Detailed Player Stats for SportsPress
-Description: An advanced player per season stats template.
-Author: Savvas
-Author URI: https://profiles.wordpress.org/savvasha/
-Version: 1.2.2
-Requires at least: 5.3
-Requires PHP: 7.2
-License: GPL v2 or later
-License URI: https://www.gnu.org/licenses/gpl.html
+ * Plugin Name: Detailed Player Stats for SportsPress
+ * Description: An advanced player per season stats template.
+ * Version: 1.2.2
+ * Author: Savvas
+ * Author URI: https://profiles.wordpress.org/savvasha/
+ * Requires at least: 5.3
+ * Requires PHP: 7.2
+ * License: GPL v2 or later
+ * License URI: https://www.gnu.org/licenses/gpl.html
+ *
+ * @package detailed-player-stats-for-sportspress
+ * @category Core
+ * @author savvasha
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -26,7 +30,11 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 	 */
 	class Detailed_Player_Stats_For_SportsPress {
 
-		/** @var string The plugins mode. */
+		/**
+		 * The plugins mode.
+		 *
+		 * @var string
+		 */
 		public static $mode;
 
 		/**
@@ -36,13 +44,13 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 
 			self::$mode = get_option( 'dpsfs_player_statistics_mode', 'popup' );
 
-			// Define constants
+			// Define constants.
 			$this->define_constants();
 
-			// Include required files
+			// Include required files.
 			$this->includes();
 
-			// Hooks
+			// Hooks.
 			add_action( 'wp_ajax_player_season_matches', array( $this, 'player_season_matches' ) );
 			add_action( 'wp_ajax_nopriv_player_season_matches', array( $this, 'player_season_matches' ) );// for users that are not logged in.
 
@@ -73,13 +81,16 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 		 * Include required files
 		 */
 		private function includes() {
-			// load the needed scripts and styles
+			// load the needed scripts and styles.
 			include DPSFS_PLUGIN_DIR . '/includes/class-dpsfs-scripts.php';
 		}
 
 		/**
 		 * Shortcode override
 		 *
+		 * @param mixed $template The template path plus the name.
+		 * @param mixed $template_name The template name.
+		 * @param mixed $template_path The template path.
 		 * @return string
 		 */
 		public function shortcode_override( $template = null, $template_name = null, $template_path = null ) {
@@ -93,7 +104,7 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 		}
 
 		/**
-		 * Output and a player specific event list.
+		 * Output a player specific event list.
 		 *
 		 * @access public
 		 * @return void
@@ -109,7 +120,7 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 				$this->team_id          = intval( $_REQUEST['team_id'] );
 				$this->player_id        = intval( $_REQUEST['player_id'] );
 
-				if ( 'inline' == self::$mode ) {
+				if ( 'inline' === self::$mode ) {
 					$title = get_the_title( $this->player_id ) . ' @ ' . $this->competition_name;
 				} else {
 					$title = $this->competition_name;
@@ -134,6 +145,13 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 			}
 		}
 
+		/**
+		 * Output the extra needed head row columns.
+		 *
+		 * @access public
+		 * @param mixed $usecolumns The columns that are used.
+		 * @return void
+		 */
 		public function player_stats_head_row( $usecolumns ) {
 			if ( 'yes' === get_option( 'dpsfs_show_performances', 'yes' ) ) {
 				echo '<th class="data-stats">' . esc_html__( 'Performances', 'sportspress' ) . '</th>';
@@ -144,6 +162,14 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 			}
 		}
 
+		/**
+		 * Output the extra needed body row columns.
+		 *
+		 * @access public
+		 * @param object $event The event object.
+		 * @param mixed  $usecolumns The columns that are used.
+		 * @return void
+		 */
 		public function player_stats_body_row( $event, $usecolumns ) {
 			if ( 'yes' === get_option( 'dpsfs_show_performances', 'yes' ) ) {
 				echo '<td class="data-stats">';
@@ -159,6 +185,15 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 			}
 		}
 
+		/**
+		 * Return the player performances.
+		 *
+		 * @access private
+		 * @param integer $player_id The Player ID.
+		 * @param integer $match_id The Match ID.
+		 * @param integer $team_id The Team ID.
+		 * @return string
+		 */
 		private function get_player_match_performance( $player_id, $match_id = null, $team_id = null ) {
 			$player_match_performance = null;
 			$team_performance         = (array) get_post_meta( $match_id, 'sp_players', true );
@@ -168,13 +203,14 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 			}
 
 			foreach ( $team_performance[ $team_id ] as $tplayer_id => $performances ) {
-				if ( $tplayer_id == $player_id ) {
+				if ( $tplayer_id === $player_id ) {
 					foreach ( $performances as $key => $times ) {
-						if ( in_array( $key, array( 'sub', 'status', 'number', 'position' ) ) ) {
+						if ( in_array( $key, array( 'sub', 'status', 'number', 'position' ), true ) ) {
 							continue;
 						}
 						$performance_id = 0;
-						if ( $post = get_page_by_path( $key, OBJECT, 'sp_performance' ) ) {
+						$post           = get_page_by_path( $key, OBJECT, 'sp_performance' );
+						if ( $post ) {
 							$performance_id = $post->ID;
 						}
 						$icon = '';
@@ -192,6 +228,15 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 			return $player_match_performance;
 		}
 
+		/**
+		 * Return the player minutes.
+		 *
+		 * @access private
+		 * @param integer $player_id The Player ID.
+		 * @param integer $match_id The Match ID.
+		 * @param integer $team_id The Team ID.
+		 * @return integer
+		 */
 		private function get_player_match_minutes( $player_id, $match_id = null, $team_id = null ) {
 			$team_performance = (array) get_post_meta( $match_id, 'sp_players', true );
 			$timeline         = (array) get_post_meta( $match_id, 'sp_timeline', true );
@@ -202,7 +247,7 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 			}
 			$played_minutes = 0;
 
-			// Get performance labels
+			// Get performance labels.
 			$args = array(
 				'post_type'      => array( 'sp_performance' ),
 				'numberposts'    => 100,
@@ -237,12 +282,12 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 				if ( is_array( $players ) && array_key_exists( $player_id, $players ) ) {
 					$player_performance = sp_array_value( $players, $player_id, array() );
 
-					// Continue if active in event
-					if ( sp_array_value( $player_performance, 'status' ) != 'sub' || sp_array_value( $player_performance, 'sub', 0 ) ) {
+					// Continue if active in event.
+					if ( sp_array_value( $player_performance, 'status' ) !== 'sub' || sp_array_value( $player_performance, 'sub', 0 ) ) {
 						$played_minutes = (int) $minutes;
-						// Adjust for substitution time
+						// Adjust for substitution time.
 						if ( sp_array_value( $player_performance, 'status' ) === 'sub' ) {
-							// Substituted for another player
+							// Substituted for another player.
 							$timeline_performance = sp_array_value( sp_array_value( $timeline, $team_id, array() ), $player_id, array() );
 
 							if ( empty( $timeline_performance ) ) {
@@ -259,15 +304,15 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 									$sendoff_time = 0;
 								}
 
-								// Count minutes until being sent off
+								// Count minutes until being sent off.
 								$played_minutes = (int) $sendoff_time;
 							}
 
-							// Subtract minutes prior to substitution
+							// Subtract minutes prior to substitution.
 							$substitution_time = sp_array_value( sp_array_value( sp_array_value( sp_array_value( $timeline, $team_id ), $player_id ), 'sub' ), 0, 0 );
 							$played_minutes   -= (int) $substitution_time;
 						} else {
-							// Starting lineup with possible substitution
+							// Starting lineup with possible substitution.
 							$subbed_out = false;
 							foreach ( $timeline as $timeline_team => $timeline_players ) {
 								if ( ! is_array( $timeline_players ) ) {
@@ -278,19 +323,19 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 										$substitution_time = sp_array_value( sp_array_value( sp_array_value( sp_array_value( $timeline, $team_id ), $timeline_player ), 'sub' ), 0, 0 );
 										if ( $substitution_time ) :
 
-											// Count minutes until substitution
+											// Count minutes until substitution.
 											$played_minutes = (int) $substitution_time;
 											$subbed_out     = true;
 										endif;
 									endif;
 								}
 
-								// No need to check for sendoffs if subbed out
+								// No need to check for sendoffs if subbed out.
 								if ( $subbed_out ) {
 									continue;
 								}
 
-								// Check for sendoffs
+								// Check for sendoffs.
 								$timeline_performance = sp_array_value( $timeline_players, $player_id, array() );
 								if ( empty( $timeline_performance ) ) {
 									continue;
@@ -306,7 +351,7 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 										continue;
 									}
 
-									// Count minutes until being sent off
+									// Count minutes until being sent off.
 									$played_minutes = (int) $sendoff_time;
 								}
 							}
@@ -320,6 +365,7 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 		/**
 		 * Add settings.
 		 *
+		 * @param mixed $settings The SportsPress settings array.
 		 * @return array
 		 */
 		public function add_settings( $settings ) {

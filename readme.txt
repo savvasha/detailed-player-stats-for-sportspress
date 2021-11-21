@@ -35,7 +35,7 @@ This plugin is an extension for [SportsPress](https://wordpress.org/plugins/spor
 
 = 1.2.2 =
 
-* Tweak: Changes based on phpcfs and WP coding standards.
+* Tweak: Changes based on phpcs and WP coding standards.
 
 = 1.2.1 =
 
