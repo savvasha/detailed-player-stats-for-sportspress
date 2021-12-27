@@ -370,6 +370,34 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 		 */
 		public function add_settings( $settings ) {
 
+			$dpsfs_show_extra_details = array();
+			$dpsfs_show_extra_details[ 'Performances' ] = array();
+			$dpsfs_show_extra_details[ 'Metrics' ]  = array();
+			$dpsfs_show_extra_details[ 'Statistics' ] = array();
+			
+			$sp_performances = get_posts(
+					array(
+						'post_type' 	=> 'sp_performance',
+						'numberposts'   => -1,
+					)
+				);
+			$sp_metrics = get_posts(
+					array(
+						'post_type' 	=> 'sp_metric',
+						'numberposts'   => -1,
+					)
+				);
+			$sp_statistics = get_posts(
+					array(
+						'post_type' 	=> 'sp_statistic',
+						'numberposts'   => -1,
+					)
+				);
+				
+				var_dump($sp_performances);
+				var_dump($sp_metrics);
+				var_dump($sp_statistics);
+			
 			$settings = array_merge(
 				$settings,
 				array(
@@ -407,6 +435,13 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 							'default'       => 'yes',
 							'type'          => 'checkbox',
 							'checkboxgroup' => 'end',
+						),
+						array(
+							'title'   => esc_attr__( 'Extra Details', 'sportspress' ),
+							'id'      => 'dpsfs_show_extra_details',
+							'default' => 'title',
+							'type'    => 'multiselect',
+							'options' => $dpsfs_show_extra_details,
 						),
 					)
 				),
