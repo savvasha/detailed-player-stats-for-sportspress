@@ -53,6 +53,8 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 			// Hooks.
 			add_action( 'wp_ajax_player_season_matches', array( $this, 'player_season_matches' ) );
 			add_action( 'wp_ajax_nopriv_player_season_matches', array( $this, 'player_season_matches' ) );// for users that are not logged in.
+			add_action( 'sportspress_admin_field_multigroupselect', array( $this, 'multigroupselect_settings' ) );
+			add_action( 'sportspress_update_option_multigroupselect', array( $this, 'multigroupselect_settings_save' ) );
 
 			add_filter( 'sportspress_locate_template', array( $this, 'shortcode_override' ), 10, 3 );
 			add_filter( 'sportspress_player_settings', array( $this, 'add_settings' ) );
@@ -381,28 +383,36 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 						'numberposts'   => -1,
 					)
 				);
+			foreach ( $sp_performances as $sp_performance ) {
+				$dpsfs_show_extra_details[ 'Performances' ][ $sp_performance->post_name ] = $sp_performance->post_title;
+			}
 			$sp_metrics = get_posts(
 					array(
 						'post_type' 	=> 'sp_metric',
 						'numberposts'   => -1,
 					)
 				);
+			foreach ( $sp_metrics as $sp_metric ) {
+				$dpsfs_show_extra_details[ 'Metrics' ][ $sp_metric->post_name ] = $sp_metric->post_title;
+			}
 			$sp_statistics = get_posts(
 					array(
 						'post_type' 	=> 'sp_statistic',
 						'numberposts'   => -1,
 					)
 				);
-				
-				var_dump($sp_performances);
-				var_dump($sp_metrics);
-				var_dump($sp_statistics);
+			foreach ( $sp_statistics as $sp_statistic ) {
+				$dpsfs_show_extra_details[ 'Statistics' ][ $sp_statistic->post_name ] = $sp_statistic->post_title;
+			}
+				//var_dump($sp_performances);
+				//var_dump($sp_metrics);
+				//var_dump($dpsfs_show_extra_details);
 			
 			$settings = array_merge(
 				$settings,
 				array(
 					array(
-						'title' => __( 'Detailed Statistics', 'detailed-player-statistics-for-sportspress' ),
+						'title' => __( 'Detailed Season Statistics', 'detailed-player-statistics-for-sportspress' ),
 						'type'  => 'title',
 						'id'    => 'dpsfs_detailed_stats_options',
 					),
@@ -440,7 +450,7 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 							'title'   => esc_attr__( 'Extra Details', 'sportspress' ),
 							'id'      => 'dpsfs_show_extra_details',
 							'default' => 'title',
-							'type'    => 'multiselect',
+							'type'    => 'multigroupselect',
 							'options' => $dpsfs_show_extra_details,
 						),
 					)
@@ -453,6 +463,81 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 				)
 			);
 			return $settings;
+		}
+		
+		/**
+		 * Add settings.
+		 *
+		 * @param mixed $value The settings value array.
+		 * @return void
+		 */
+		public function multigroupselect_settings( $value ) {
+			$option_value = SP_Admin_Settings::get_option( $value['id'], $value['default'] );
+			var_dump($value);
+			var_dump($option_value);
+			var_dump($_POST);
+			?>
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+				</th>
+				<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
+					<select
+						name="<?php echo esc_attr( $value['id'] ); ?><?php echo '[]'; ?>"
+						id="<?php echo esc_attr( $value['id'] ); ?>"
+						style="<?php echo esc_attr( $value['css'] ); ?>"
+						class="chosen-select
+						<?php
+						if ( is_rtl() ) :
+							?>
+							 chosen-rtl<?php endif; ?> <?php echo esc_attr( $value['class'] ); ?>"
+						<?php
+							echo 'multiple="multiple"';
+						?>
+						>
+						<?php
+						foreach ( $value['options'] as $group => $options ) {
+							?>
+							<optgroup label="<?php esc_attr_e( $group, 'sportspress' ); ?>">
+								<?php foreach ( $options as $key => $val ) { ?>
+									<option value="<?php echo esc_attr( $key ); ?>" 
+															  <?php
+
+																if ( is_array( $option_value ) ) {
+																	selected( in_array( $key, $option_value ), true );
+																} else {
+																	selected( $option_value, $key );
+																}
+
+																?>
+									><?php echo esc_attr( $val ); ?>
+									</option>
+								<?php } ?>
+							</optgroup>
+								<?php
+						}
+						?>
+				   </select>
+				</td>
+			</tr>
+			<?php
+		}
+		
+		/**
+		 * Save settings.
+		 *
+		 * @param mixed $value The settings value array.
+		 * @return void
+		 */
+		public function multigroupselect_settings_save( $value ) {
+			if ( isset( $_POST[ $value['id'] ] ) ) {
+				$dpsfs_show_extra_details = array_map( 'sanitize_text_field', array_map( 'wp_unslash', (array) $_POST[ $value['id'] ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+			} else {
+				$dpsfs_show_extra_details = array();
+			}
+
+			$option_value = $dpsfs_show_extra_details;
+			var_dump($option_value);
 		}
 
 	}
