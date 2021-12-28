@@ -372,10 +372,9 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 		 */
 		public function add_settings( $settings ) {
 
-			$dpsfs_show_extra_details = array();
 			$dpsfs_show_extra_details[ 'Performances' ] = array();
-			$dpsfs_show_extra_details[ 'Metrics' ]  = array();
-			$dpsfs_show_extra_details[ 'Statistics' ] = array();
+			//$dpsfs_show_extra_details[ 'Metrics' ]  = array();
+			//$dpsfs_show_extra_details[ 'Statistics' ] = array();
 			
 			$sp_performances = get_posts(
 					array(
@@ -386,7 +385,7 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 			foreach ( $sp_performances as $sp_performance ) {
 				$dpsfs_show_extra_details[ 'Performances' ][ $sp_performance->post_name ] = $sp_performance->post_title;
 			}
-			$sp_metrics = get_posts(
+			/*$sp_metrics = get_posts(
 					array(
 						'post_type' 	=> 'sp_metric',
 						'numberposts'   => -1,
@@ -403,10 +402,7 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 				);
 			foreach ( $sp_statistics as $sp_statistic ) {
 				$dpsfs_show_extra_details[ 'Statistics' ][ $sp_statistic->post_name ] = $sp_statistic->post_title;
-			}
-				//var_dump($sp_performances);
-				//var_dump($sp_metrics);
-				//var_dump($dpsfs_show_extra_details);
+			}*/
 			
 			$settings = array_merge(
 				$settings,
