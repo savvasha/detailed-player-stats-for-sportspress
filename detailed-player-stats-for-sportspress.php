@@ -196,12 +196,16 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 			}
 			$dpsfs_show_extra_details = get_option( 'dpsfs_show_extra_details' );
 			if ( $dpsfs_show_extra_details ) {
-				$team_performance = (array) get_post_meta( $event->ID, 'sp_players', true );
-				$timeline = (array) get_post_meta( $event->ID, 'sp_timeline', true );
-				$timeline_performance = sp_array_value( sp_array_value( $timeline, $this->team_id, array() ), $this->player_id, array() );
-				var_dump($timeline_performance );
+				$event_performance = (array) get_post_meta( $event->ID, 'sp_players', true );
+				$player_performance = sp_array_value( sp_array_value( $event_performance, $this->team_id, array() ), $this->player_id, array() );
 				foreach ( $dpsfs_show_extra_details as $dpsfs_show_extra_detail ) {
-					echo '<td class="data-stats"></td>';
+					$performance = get_page_by_path( $dpsfs_show_extra_detail, 'OBJECT', 'sp_performance' );
+					$performance_format = sp_get_post_format( $performance->ID );
+					if ( isset ( $player_performance[ $dpsfs_show_extra_detail ] ) ) {
+						echo '<td class="data-stats">' . $player_performance[ $dpsfs_show_extra_detail ] . '</td>';
+					}else{
+						echo '<td class="data-stats"></td>';
+					}
 				}
 			}
 		}
