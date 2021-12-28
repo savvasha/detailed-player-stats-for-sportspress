@@ -162,6 +162,15 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 			if ( 'yes' === get_option( 'dpsfs_show_minutes', 'yes' ) ) {
 				echo '<th class="data-minutes">' . esc_html__( 'Minutes', 'sportspress' ) . '</th>';
 			}
+			
+			$dpsfs_show_extra_details = get_option( 'dpsfs_show_extra_details' );
+			if ( $dpsfs_show_extra_details ) {
+				$performance_labels = sp_get_var_labels( 'sp_performance' );
+				foreach ( $dpsfs_show_extra_details as $dpsfs_show_extra_detail ) {
+					echo '<th class="data-' . $dpsfs_show_extra_detail . '">' . esc_html__( $performance_labels[ $dpsfs_show_extra_detail ], 'sportspress' ) . '</th>';
+				}
+			}
+			
 		}
 
 		/**
@@ -184,6 +193,16 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 				$minutes = $this->get_player_match_minutes( (int) $this->player_id, $event->ID );
 				echo esc_attr( $minutes ) . '\'';
 				echo '</td>';
+			}
+			$dpsfs_show_extra_details = get_option( 'dpsfs_show_extra_details' );
+			if ( $dpsfs_show_extra_details ) {
+				$team_performance = (array) get_post_meta( $event->ID, 'sp_players', true );
+				$timeline = (array) get_post_meta( $event->ID, 'sp_timeline', true );
+				$timeline_performance = sp_array_value( sp_array_value( $timeline, $this->team_id, array() ), $this->player_id, array() );
+				var_dump($timeline_performance );
+				foreach ( $dpsfs_show_extra_details as $dpsfs_show_extra_detail ) {
+					echo '<td class="data-stats"></td>';
+				}
 			}
 		}
 
