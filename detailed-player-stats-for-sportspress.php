@@ -449,7 +449,6 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 						array(
 							'title'   => esc_attr__( 'Extra Details', 'sportspress' ),
 							'id'      => 'dpsfs_show_extra_details',
-							'default' => 'title',
 							'type'    => 'multigroupselect',
 							'options' => $dpsfs_show_extra_details,
 						),
@@ -472,10 +471,7 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 		 * @return void
 		 */
 		public function multigroupselect_settings( $value ) {
-			$option_value = SP_Admin_Settings::get_option( $value['id'], $value['default'] );
-			var_dump($value);
-			var_dump($option_value);
-			var_dump($_POST);
+			$option_value = SP_Admin_Settings::get_option( $value['id'] );
 			?>
 			<tr valign="top">
 				<th scope="row" class="titledesc">
@@ -486,20 +482,16 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 						name="<?php echo esc_attr( $value['id'] ); ?><?php echo '[]'; ?>"
 						id="<?php echo esc_attr( $value['id'] ); ?>"
 						style="<?php echo esc_attr( $value['css'] ); ?>"
-						class="chosen-select
-						<?php
-						if ( is_rtl() ) :
-							?>
-							 chosen-rtl<?php endif; ?> <?php echo esc_attr( $value['class'] ); ?>"
-						<?php
-							echo 'multiple="multiple"';
-						?>
+						class="chosen-select"
+						multiple="multiple"
 						>
 						<?php
 						foreach ( $value['options'] as $group => $options ) {
 							?>
 							<optgroup label="<?php esc_attr_e( $group, 'sportspress' ); ?>">
-								<?php foreach ( $options as $key => $val ) { ?>
+								<?php
+								foreach ( $options as $key => $val ) {
+									?>
 									<option value="<?php echo esc_attr( $key ); ?>" 
 															  <?php
 
@@ -510,11 +502,12 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 																}
 
 																?>
-									><?php echo esc_attr( $val ); ?>
-									</option>
-								<?php } ?>
+									><?php echo esc_attr( $val ); ?></option>
+									<?php
+								}
+								?>
 							</optgroup>
-								<?php
+							<?php
 						}
 						?>
 				   </select>
@@ -537,7 +530,8 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 			}
 
 			$option_value = $dpsfs_show_extra_details;
-			var_dump($option_value);
+			
+			update_option( $value['id'], $option_value );
 		}
 
 	}
