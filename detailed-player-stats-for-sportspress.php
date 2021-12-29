@@ -53,8 +53,6 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 			// Hooks.
 			add_action( 'wp_ajax_player_season_matches', array( $this, 'player_season_matches' ) );
 			add_action( 'wp_ajax_nopriv_player_season_matches', array( $this, 'player_season_matches' ) );// for users that are not logged in.
-			add_action( 'sportspress_admin_field_multigroupselect', array( $this, 'multigroupselect_settings' ) );
-			add_action( 'sportspress_update_option_multigroupselect', array( $this, 'multigroupselect_settings_save' ) );
 
 			add_filter( 'sportspress_locate_template', array( $this, 'shortcode_override' ), 10, 3 );
 			add_filter( 'sportspress_player_settings', array( $this, 'add_settings' ) );
@@ -112,7 +110,7 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 		 * @return void
 		 */
 		public function player_season_matches() {
-			if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'dpsfs_player_statistics_league_ajax' ) ) {
+			if ( isset( $_REQUEST['nonce'] ) && ! wp_verify_nonce( $_REQUEST['nonce'], 'dpsfs_player_statistics_league_ajax' ) ) {
 				exit( 'Something went wrong...' );
 			}
 			if ( isset( $_REQUEST['player_id'] ) ) {
@@ -162,15 +160,15 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 			if ( 'yes' === get_option( 'dpsfs_show_minutes', 'yes' ) ) {
 				echo '<th class="data-minutes">' . esc_html__( 'Minutes', 'sportspress' ) . '</th>';
 			}
-			
+
 			$dpsfs_show_extra_details = get_option( 'dpsfs_show_extra_details' );
 			if ( $dpsfs_show_extra_details ) {
 				$performance_labels = sp_get_var_labels( 'sp_performance' );
 				foreach ( $dpsfs_show_extra_details as $dpsfs_show_extra_detail ) {
-					echo '<th class="data-' . $dpsfs_show_extra_detail . '">' . esc_html__( $performance_labels[ $dpsfs_show_extra_detail ], 'sportspress' ) . '</th>';
+					echo '<th class="data-' . esc_attr( $dpsfs_show_extra_detail ) . '">' . esc_html__( $performance_labels[ $dpsfs_show_extra_detail ], 'sportspress' ) . '</th>';
 				}
 			}
-			
+
 		}
 
 		/**
@@ -191,19 +189,19 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 			if ( 'yes' === get_option( 'dpsfs_show_minutes', 'yes' ) ) {
 				echo '<td class="data-stats">';
 				$minutes = $this->get_player_match_minutes( (int) $this->player_id, $event->ID );
-				echo esc_attr( $minutes ) . '\'';
+				echo esc_html( $minutes ) . '\'';
 				echo '</td>';
 			}
 			$dpsfs_show_extra_details = get_option( 'dpsfs_show_extra_details' );
 			if ( $dpsfs_show_extra_details ) {
-				$event_performance = (array) get_post_meta( $event->ID, 'sp_players', true );
+				$event_performance  = (array) get_post_meta( $event->ID, 'sp_players', true );
 				$player_performance = sp_array_value( sp_array_value( $event_performance, $this->team_id, array() ), $this->player_id, array() );
 				foreach ( $dpsfs_show_extra_details as $dpsfs_show_extra_detail ) {
-					$performance = get_page_by_path( $dpsfs_show_extra_detail, 'OBJECT', 'sp_performance' );
+					$performance        = get_page_by_path( $dpsfs_show_extra_detail, 'OBJECT', 'sp_performance' );
 					$performance_format = sp_get_post_format( $performance->ID );
-					if ( isset ( $player_performance[ $dpsfs_show_extra_detail ] ) ) {
-						echo '<td class="data-stats">' . $player_performance[ $dpsfs_show_extra_detail ] . '</td>';
-					}else{
+					if ( isset( $player_performance[ $dpsfs_show_extra_detail ] ) ) {
+						echo '<td class="data-stats">' . wp_kses_post( $player_performance[ $dpsfs_show_extra_detail ] ) . '</td>';
+					} else {
 						echo '<td class="data-stats"></td>';
 					}
 				}
@@ -395,38 +393,18 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 		 */
 		public function add_settings( $settings ) {
 
-			$dpsfs_show_extra_details[ 'Performances' ] = array();
-			//$dpsfs_show_extra_details[ 'Metrics' ]  = array();
-			//$dpsfs_show_extra_details[ 'Statistics' ] = array();
-			
+			$dpsfs_show_extra_details = array();
+
 			$sp_performances = get_posts(
-					array(
-						'post_type' 	=> 'sp_performance',
-						'numberposts'   => -1,
-					)
-				);
+				array(
+					'post_type'   => 'sp_performance',
+					'numberposts' => -1,
+				)
+			);
 			foreach ( $sp_performances as $sp_performance ) {
-				$dpsfs_show_extra_details[ 'Performances' ][ $sp_performance->post_name ] = $sp_performance->post_title;
+				$dpsfs_show_extra_details[ $sp_performance->post_name ] = $sp_performance->post_title;
 			}
-			/*$sp_metrics = get_posts(
-					array(
-						'post_type' 	=> 'sp_metric',
-						'numberposts'   => -1,
-					)
-				);
-			foreach ( $sp_metrics as $sp_metric ) {
-				$dpsfs_show_extra_details[ 'Metrics' ][ $sp_metric->post_name ] = $sp_metric->post_title;
-			}
-			$sp_statistics = get_posts(
-					array(
-						'post_type' 	=> 'sp_statistic',
-						'numberposts'   => -1,
-					)
-				);
-			foreach ( $sp_statistics as $sp_statistic ) {
-				$dpsfs_show_extra_details[ 'Statistics' ][ $sp_statistic->post_name ] = $sp_statistic->post_title;
-			}*/
-			
+
 			$settings = array_merge(
 				$settings,
 				array(
@@ -468,7 +446,7 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 						array(
 							'title'   => esc_attr__( 'Extra Details', 'sportspress' ),
 							'id'      => 'dpsfs_show_extra_details',
-							'type'    => 'multigroupselect',
+							'type'    => 'multiselect',
 							'options' => $dpsfs_show_extra_details,
 						),
 					)
@@ -482,77 +460,6 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 			);
 			return $settings;
 		}
-		
-		/**
-		 * Add settings.
-		 *
-		 * @param mixed $value The settings value array.
-		 * @return void
-		 */
-		public function multigroupselect_settings( $value ) {
-			$option_value = SP_Admin_Settings::get_option( $value['id'] );
-			?>
-			<tr valign="top">
-				<th scope="row" class="titledesc">
-					<label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
-				</th>
-				<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
-					<select
-						name="<?php echo esc_attr( $value['id'] ); ?><?php echo '[]'; ?>"
-						id="<?php echo esc_attr( $value['id'] ); ?>"
-						style="<?php echo esc_attr( $value['css'] ); ?>"
-						class="chosen-select"
-						multiple="multiple"
-						>
-						<?php
-						foreach ( $value['options'] as $group => $options ) {
-							?>
-							<optgroup label="<?php esc_attr_e( $group, 'sportspress' ); ?>">
-								<?php
-								foreach ( $options as $key => $val ) {
-									?>
-									<option value="<?php echo esc_attr( $key ); ?>" 
-															  <?php
-
-																if ( is_array( $option_value ) ) {
-																	selected( in_array( $key, $option_value ), true );
-																} else {
-																	selected( $option_value, $key );
-																}
-
-																?>
-									><?php echo esc_attr( $val ); ?></option>
-									<?php
-								}
-								?>
-							</optgroup>
-							<?php
-						}
-						?>
-				   </select>
-				</td>
-			</tr>
-			<?php
-		}
-		
-		/**
-		 * Save settings.
-		 *
-		 * @param mixed $value The settings value array.
-		 * @return void
-		 */
-		public function multigroupselect_settings_save( $value ) {
-			if ( isset( $_POST[ $value['id'] ] ) ) {
-				$dpsfs_show_extra_details = array_map( 'sanitize_text_field', array_map( 'wp_unslash', (array) $_POST[ $value['id'] ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-			} else {
-				$dpsfs_show_extra_details = array();
-			}
-
-			$option_value = $dpsfs_show_extra_details;
-			
-			update_option( $value['id'], $option_value );
-		}
-
 	}
 
 endif;
