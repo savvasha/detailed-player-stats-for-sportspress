@@ -441,6 +441,13 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 							'id'            => 'dpsfs_show_minutes',
 							'default'       => 'yes',
 							'type'          => 'checkbox',
+							'checkboxgroup' => '',
+						),
+						array(
+							'desc'          => __( 'Squad Number', 'sportspress' ),
+							'id'            => 'dpsfs_show_number',
+							'default'       => 'no',
+							'type'          => 'checkbox',
 							'checkboxgroup' => 'end',
 						),
 						array(
