@@ -153,6 +153,11 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 		 * @return void
 		 */
 		public function player_stats_head_row( $usecolumns ) {
+			
+			if ( 'yes' === get_option( 'dpsfs_show_number', 'no' ) ) {
+				echo '<th class="data-number">' . esc_html__( 'Squad Number', 'sportspress' ) . '</th>';
+			}
+			
 			if ( 'yes' === get_option( 'dpsfs_show_performances', 'yes' ) ) {
 				echo '<th class="data-stats">' . esc_html__( 'Performances', 'sportspress' ) . '</th>';
 			}
@@ -180,18 +185,28 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 		 * @return void
 		 */
 		public function player_stats_body_row( $event, $usecolumns ) {
+			
+			if ( 'yes' === get_option( 'dpsfs_show_number', 'no' ) ) {
+				echo '<td class="data-stats">';
+				$squad_number = sp_get_player_number_in_event_or_profile( (int) $this->player_id, $this->team_id, $event->ID );
+				echo esc_html( $squad_number );
+				echo '</td>';
+			}
+			
 			if ( 'yes' === get_option( 'dpsfs_show_performances', 'yes' ) ) {
 				echo '<td class="data-stats">';
 				$stats = $this->get_player_match_performance( (int) $this->player_id, $event->ID, $this->team_id );
 				echo wp_kses_post( $stats );
 				echo '</td>';
 			}
+			
 			if ( 'yes' === get_option( 'dpsfs_show_minutes', 'yes' ) ) {
 				echo '<td class="data-stats">';
 				$minutes = $this->get_player_match_minutes( (int) $this->player_id, $event->ID );
 				echo esc_html( $minutes ) . '\'';
 				echo '</td>';
 			}
+			
 			$dpsfs_show_extra_details = get_option( 'dpsfs_show_extra_details' );
 			if ( $dpsfs_show_extra_details ) {
 				$event_performance  = (array) get_post_meta( $event->ID, 'sp_players', true );
