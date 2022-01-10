@@ -414,6 +414,8 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 				array(
 					'post_type'   => 'sp_performance',
 					'numberposts' => -1,
+					'orderby'     => 'menu_order',
+					'order'       => 'ASC',
 				)
 			);
 			foreach ( $sp_performances as $sp_performance ) {
