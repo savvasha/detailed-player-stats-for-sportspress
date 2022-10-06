@@ -12,6 +12,11 @@ jQuery(document).ready(function($) {
 		var player_id = $(this).data('player_id');
 		var nonce = $(this).data('nonce');
 		
+		//Show loading info till ajax response is ready
+		var original_button_text = $(this).text()
+		var $this = $(this);
+		$this.html('<img src="/wp-admin/images/loading.gif" alt="loading.gif"/>');
+		
 		//Call player_season_matches() function and return the response to div#player_events and from there to thickbox
 		var ajax_call = $.ajax({
 			url  : the_ajax_script.ajaxurl,
@@ -26,6 +31,7 @@ jQuery(document).ready(function($) {
 				nonce: nonce
 			},
 			success : function( response ) {
+				$this.text(original_button_text);
 				$('#player_events').html( response );
 				tb_show(player_name + ' @ ' + competition_name, '#TB_inline?&width=640&height=300&inlineId=player_events', false);
 			},
