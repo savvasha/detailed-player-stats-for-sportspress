@@ -34,7 +34,7 @@ class DPSFS_Scripts {
 			wp_localize_script( 'player_season_matches_ajax', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php?lang=' . get_bloginfo( 'language' ) ) ) );
 
 			// Some css code.
-			wp_enqueue_style( 'player_season_matches_ajax', DPSFS_PLUGIN_URL . '/assets/css/front.css', array(), '1.2.1' );
+			wp_enqueue_style( 'player_season_matches_ajax', DPSFS_PLUGIN_URL . 'assets/css/front.css', array(), '1.2.1' );
 
 		}
 
