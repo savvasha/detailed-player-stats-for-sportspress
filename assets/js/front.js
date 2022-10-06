@@ -36,6 +36,7 @@ jQuery(document).ready(function($) {
 				tb_show(player_name + ' @ ' + competition_name, '#TB_inline?&width=640&height=300&inlineId=player_events', false);
 			},
 			error : function (response){
+				$this.text('ERROR');
 			}
 		})
 	})
