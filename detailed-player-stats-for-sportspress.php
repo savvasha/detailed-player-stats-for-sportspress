@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Detailed Player Stats for SportsPress
  * Description: An advanced player per season stats template.
- * Version: 1.4.3
+ * Version: 1.5
  * Author: Savvas
  * Author URI: https://profiles.wordpress.org/savvasha/
  * Requires at least: 5.3
@@ -153,6 +153,10 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 		 */
 		public function player_stats_head_row( $usecolumns ) {
 			
+			if ( 'yes' === get_option( 'dpsfs_show_day', 'no' ) ) {
+				echo '<th class="data-day">' . esc_html__( 'Match Day', 'sportspress' ) . '</th>';
+			}
+			
 			if ( 'yes' === get_option( 'dpsfs_show_number', 'no' ) ) {
 				echo '<th class="data-number">' . esc_html__( 'Squad Number', 'sportspress' ) . '</th>';
 			}
@@ -184,6 +188,13 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 		 * @return void
 		 */
 		public function player_stats_body_row( $event, $usecolumns ) {
+			
+			if ( 'yes' === get_option( 'dpsfs_show_day', 'no' ) ) {
+				echo '<td class="data-stats">';
+				$match_day = get_post_meta( $event->ID, 'sp_day', true );
+				echo esc_html( $match_day );
+				echo '</td>';
+			}
 			
 			if ( 'yes' === get_option( 'dpsfs_show_number', 'no' ) ) {
 				echo '<td class="data-stats">';
@@ -462,6 +473,13 @@ if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
 						array(
 							'desc'          => __( 'Squad Number', 'sportspress' ),
 							'id'            => 'dpsfs_show_number',
+							'default'       => 'no',
+							'type'          => 'checkbox',
+							'checkboxgroup' => '',
+						),
+						array(
+							'desc'          => __( 'Match Day', 'sportspress' ),
+							'id'            => 'dpsfs_show_day',
 							'default'       => 'no',
 							'type'          => 'checkbox',
 							'checkboxgroup' => 'end',
