@@ -33,7 +33,7 @@ This plugin is an extension for [SportsPress](https://wordpress.org/plugins/spor
 
 == Changelog ==
 
-= 1.5 =
+= 1.5.0 =
 
 * Feature: Add option to show event's Match Day.
 
