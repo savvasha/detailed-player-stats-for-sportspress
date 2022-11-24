@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Player_Stats_For_SportsPress' ) ) :
+if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 
 	/**
 	 * Main Detailed Player Stats For SportsPress Class
