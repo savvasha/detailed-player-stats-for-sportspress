@@ -21,8 +21,8 @@ if ( ! isset( $id ) ) {
 
 $player = new SP_Player( $id );
 
-$scrollable         = get_option( 'sportspress_enable_scrollable_tables', 'yes' ) === 'yes' ? true : false;
-$show_career_totals = 'yes' === get_option( 'sportspress_player_show_career_total', 'no' ) ? true : false;
+$scrollable         = get_option( 'sportspress_enable_scrollable_tables', 'yes' ) === 'yes';
+$show_career_totals = 'yes' === get_option( 'sportspress_player_show_career_total', 'no' );
 $sections           = get_option( 'sportspress_player_performance_sections', -1 );
 $show_teams         = apply_filters( 'sportspress_player_team_statistics', true );
 $leagues            = array_filter( (array) get_the_terms( $id, 'sp_league' ) );

@@ -43,13 +43,15 @@ $i = 0;
 $player_assignments = get_post_meta( $player_id, 'sp_assignments', false );
 
 foreach ( $data as $season_id => $row ) :
+// Get the decimal value of midseason and convert it to integer (i.e. from 0.2 get 2) Compatible only with single digit decimals.
+$season_frac  = 10 * ( $season_id - (int) $season_id );
 
 	$output .= '<tr class="' . ( 0 === $i % 2 ? 'odd' : 'even' ) . '">';
 
 	// Get some more info.
 	$competition_name = __( 'Career', 'sportspress' );
 	if ( -1 !== $season_id ) {
-		$season_object = get_term_by( 'id', $season_id, 'sp_season' );
+		$season_object = get_term_by( 'id', (int) $season_id, 'sp_season' );
 	}
 
 	if ( isset( $league_id ) ) {
@@ -64,16 +66,20 @@ foreach ( $data as $season_id => $row ) :
 
 	$team_id = null;
 	if ( -1 !== $season_id && ! $show_career_totals ) {
+		
 		if ( $player_assignments ) {
-			$search_text = $league_id . '_' . $season_id . '_';
+			$search_text = $league_id . '_' . (int) $season_id . '_';
 			$matches     = array_filter(
 				$player_assignments,
 				function( $el ) use ( $search_text ) {
 					return ( strpos( $el, $search_text ) !== false );
 				}
 			);
+
 			if ( ! empty( $matches ) ) {
-				$team_id = (int) explode( $search_text, reset( $matches ) )[1];
+				$correct_index = (int) $season_frac;
+				$matches       = array_values( $matches );
+				$team_id       = (int) explode( $search_text, $matches[ $correct_index ] )[1];
 			}
 		} else {
 			$team_object = get_page_by_title( wp_strip_all_tags( $row['team'] ), OBJECT, 'sp_team' );
@@ -83,7 +89,7 @@ foreach ( $data as $season_id => $row ) :
 
 	foreach ( $labels as $key => $value ) :
 		if ( 'name' === $key && -1 !== $season_id && ! $show_career_totals ) {
-			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><button data-season_id="' . $season_id . '" data-league_id="' . $league_id . '" data-player_id="' . $player_id . '" data-team_id="' . $team_id . '" data-nonce="' . $nonce . '" data-competition_name="' . $competition_name . '" data-player_name="' . esc_html( get_the_title( $player_id ) ) . '" class="player-season-stats-' . $dpsfs_mode . '">' . sp_array_value( $row, $key, '' ) . '</button></td>';
+			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><button data-season_id="' . (int) $season_id . '" data-league_id="' . $league_id . '" data-player_id="' . $player_id . '" data-team_id="' . $team_id . '" data-nonce="' . $nonce . '" data-competition_name="' . $competition_name . '" data-player_name="' . esc_html( get_the_title( $player_id ) ) . '" class="player-season-stats-' . $dpsfs_mode . '">' . sp_array_value( $row, $key, '' ) . '</button></td>';
 		} elseif ( isset( $hide_teams ) && 'team' === $key ) {
 			continue;
 		} else {
