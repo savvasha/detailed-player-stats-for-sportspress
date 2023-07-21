@@ -2,7 +2,7 @@
 Contributors: savvasha
 Tags: sportspress, players, statistics, season, events, stats, data, fixtures
 Requires at least: 5.3
-Tested up to: 6.2
+Tested up to: 6.3
 Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
