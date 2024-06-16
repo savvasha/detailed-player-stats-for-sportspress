@@ -1,9 +1,9 @@
 === Detailed Player Stats for SportsPress ===
 Contributors: savvasha
-Tags: sportspress, players, statistics, season, events, stats, data, fixtures
+Tags: sportspress, players, season, events, statistics
 Requires at least: 5.3
 Tested up to: 6.4
-Stable tag: 1.6.0
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -32,6 +32,11 @@ This plugin is an extension for [SportsPress](https://wordpress.org/plugins/spor
 4.  Display performances and minutes option in SportsPress Players Settings page
 
 == Changelog ==
+
+= 1.7.0 =
+
+* Feature: Make it compatible with [Alchemists - Sports, eSports & Gaming Club and News WordPress Theme](https://themeforest.net/item/alchemists-sports-club-and-news-wordpress-theme/20256220) by [dan_fisher](https://themeforest.net/user/dan_fisher)
+* FIX: Creation of dynamic properties is deprecated in PHP 8.2.
 
 = 1.6.0 =
 

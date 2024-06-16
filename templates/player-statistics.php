@@ -88,12 +88,12 @@ if ( is_array( $leagues ) ) :
 			if ( ! $show_teams ) {
 				$args['hide_teams'] = true;
 			}
-			sp_get_template( 'player-statistics-league.php', $args, '', DPSFS_PLUGIN_DIR . 'templates/' );
+			sp_get_template( 'dpsfs-player-statistics-league.php', $args, '', DPSFS_PLUGIN_DIR . 'templates/' );
 		endforeach;
 
 		if ( $show_career_totals ) {
 			sp_get_template(
-				'player-statistics-league.php',
+				'dpsfs-player-statistics-league.php',
 				array(
 					'data'               => $player->data( 0, false, $section_id ),
 					'caption'            => __( 'Career Total', 'sportspress' ),

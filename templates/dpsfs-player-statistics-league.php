@@ -11,6 +11,17 @@
 // Protection from certain types of misuse, malicious or otherwise of ajax callings.
 $nonce = wp_create_nonce( 'dpsfs_player_statistics_league_ajax' );
 
+// Get the current theme.
+$dpsfs_current_theme = wp_get_theme();
+if( $dpsfs_current_theme->exists() && $dpsfs_current_theme->parent() ){
+	$dpsfs_parent_theme = $dpsfs_current_theme->parent();
+
+	if( $dpsfs_parent_theme->exists() ){
+		$dpsfs_theme_name = $dpsfs_parent_theme->get('Name');
+	}
+} elseif( $dpsfs_current_theme->exists() ) {
+	$dpsfs_theme_name = $dpsfs_current_theme->get('Name');
+}
 // Get the detailed stats mode from settings.
 $dpsfs_mode = get_option( 'dpsfs_player_statistics_mode', 'popup' );
 
@@ -25,9 +36,17 @@ if ( empty( $data ) ) {
 	return;
 }
 
-$output = '<h4 class="sp-table-caption">' . $caption . '</h4>' .
-	'<div class="sp-table-wrapper">' .
-	'<table class="sp-player-statistics sp-data-table' . ( $scrollable ? ' sp-scrollable-table' : '' ) . '"> <thead> <tr>';
+if ( 'Alchemists' === $dpsfs_theme_name ) {
+	$output = '<div class="card card--has-table">';
+	$output .= '<div class="card__header">' . '<h4>' . $caption . '</h4>' . '</div>';
+		$output .= '<div class="card__content">' .
+		'<div class="table-wrapper ' . ( $scrollable ? ' table-responsive' : '' ) . '">' .
+		'<table class="table table-hover player-league">' . '<thead>' . '<tr>';	
+} else {
+	$output = '<h4 class="sp-table-caption">' . $caption . '</h4>' .
+		'<div class="sp-table-wrapper">' .
+		'<table class="sp-player-statistics sp-data-table' . ( $scrollable ? ' sp-scrollable-table' : '' ) . '"> <thead> <tr>';
+}
 
 foreach ( $labels as $key => $label ) :
 	if ( isset( $hide_teams ) && 'team' === $key ) {
@@ -102,8 +121,11 @@ $season_frac  = 10 * ( $season_id - (int) $season_id );
 	$i++;
 
 endforeach;
-
-$output .= '</tbody> </table> </div>';
+if ( 'Alchemists' === $dpsfs_theme_name ) {
+	$output .= '</tbody> </table> </div> </div> </div>';
+}else{
+	$output .= '</tbody> </table> </div>';
+}
 ?>
 <div class="sp-template sp-template-player-statistics">
 	<?php echo wp_kses_post( $output ); ?>
