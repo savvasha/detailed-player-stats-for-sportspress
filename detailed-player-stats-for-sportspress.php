@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Detailed Player Stats for SportsPress
  * Description: An advanced player per season stats template.
- * Version: 1.7.0
+ * Version: 1.7.1
  * Author: Savvas
  * Author URI: https://profiles.wordpress.org/savvasha/
  * Requires at least: 5.3
@@ -253,12 +253,16 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 			}
 			
 			$dpsfs_show_extra_details = get_option( 'dpsfs_show_extra_details' );
+
 			if ( $dpsfs_show_extra_details ) {
-				$event_performance  = (array) get_post_meta( $event->ID, 'sp_players', true );
+				// For some reason the $event object cannot call performance() class function.
+				$working_event      = new SP_Event( $event->ID );
+				$event_performance  = $working_event->performance();
 				$player_performance = sp_array_value( sp_array_value( $event_performance, $this->team_id, array() ), $this->player_id, array() );
 				foreach ( $dpsfs_show_extra_details as $dpsfs_show_extra_detail ) {
-					$performance        = get_page_by_path( $dpsfs_show_extra_detail, 'OBJECT', 'sp_performance' );
-					$performance_format = sp_get_post_format( $performance->ID );
+					// Get the performance object so as to check what format it is (Number, Equation etc...).
+					//$performance        = get_page_by_path( $dpsfs_show_extra_detail, 'OBJECT', 'sp_performance' );
+					//$performance_format = sp_get_post_format( $performance->ID );
 					if ( isset( $player_performance[ $dpsfs_show_extra_detail ] ) ) {
 						echo '<td class="data-stats">' . wp_kses_post( $player_performance[ $dpsfs_show_extra_detail ] ) . '</td>';
 					} else {
