@@ -49,15 +49,16 @@ if ( $positions ) {
 // Determine order of sections.
 if ( 1 === $sections ) {
 	$section_order = array(
-		1 => __( 'Defense', 'sportspress' ),
-		0 => __( 'Offense', 'sportspress' ),
+		1 => esc_attr__( 'Defense', 'sportspress' ),
+		0 => esc_attr__( 'Offense', 'sportspress' ),
 	);
-} elseif ( 0 === $sections ) {
-	$section_order = array( __( 'Offense', 'sportspress' ), __( 'Defense', 'sportspress' ) );
+} elseif ( 0 == $sections ) {
+	$section_order = array( esc_attr__( 'Offense', 'sportspress' ), esc_attr__( 'Defense', 'sportspress' ) );
 } else {
 	$section_order = array( -1 => null );
 }
 
+// Loop through statistics for each league.
 if ( is_array( $leagues ) ) :
 	foreach ( $section_order as $section_id => $section_label ) {
 		if ( -1 !== $section_id && ! empty( $player_sections ) && ! in_array( $section_id, $player_sections ) ) {

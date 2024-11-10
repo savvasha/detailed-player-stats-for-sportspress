@@ -98,25 +98,28 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 		 * Define constants
 		 */
 		private function define_constants() {
-			if ( ! defined( 'DPSFS_PLUGIN_BASE' ) ) {
-				define( 'DPSFS_PLUGIN_BASE', plugin_basename( __FILE__ ) );
-			}
+		    $constants = array(
+		        'DPSFS_PLUGIN_BASE' => plugin_basename( __FILE__ ),
+		        'DPSFS_PLUGIN_DIR'  => plugin_dir_path( __FILE__ ),
+		        'DPSFS_PLUGIN_URL'  => plugin_dir_url( __FILE__ ),
+		    );
 
-			if ( ! defined( 'DPSFS_PLUGIN_DIR' ) ) {
-				define( 'DPSFS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-			}
-
-			if ( ! defined( 'DPSFS_PLUGIN_URL' ) ) {
-				define( 'DPSFS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-			}
+		    foreach ( $constants as $key => $value ) {
+		        if ( ! defined( $key ) ) {
+		            define( $key, $value );
+		        }
+		    }
 		}
+
 
 		/**
 		 * Include required files
 		 */
 		private function includes() {
 			// load the needed scripts and styles.
-			include DPSFS_PLUGIN_DIR . '/includes/class-dpsfs-scripts.php';
+			if ( is_admin() || is_singular( 'sp_player' ) || has_shortcode( get_post_field( 'post_content', get_the_ID() ), 'player_statistics' ) ) {
+		        include DPSFS_PLUGIN_DIR . 'includes/class-dpsfs-scripts.php';
+		    }
 		}
 
 		/**

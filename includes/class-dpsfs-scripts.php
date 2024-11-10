@@ -18,26 +18,46 @@ class DPSFS_Scripts {
 	}
 
 	/**
-	 * Load scripts and styles where needed
+	 * Enqueue scripts and styles needed for player statistics.
+	 *
+	 * This function checks if the page is displaying a single player
+	 * or contains the player_statistics shortcode. If true, it adds
+	 * the necessary scripts and styles.
 	 *
 	 * @return void
 	 */
 	public function dpsfs_adding_scripts() {
-		global $post;
-		if ( is_singular( 'sp_player' ) || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'player_statistics' ) ) ) {
+	    if ( is_singular( 'sp_player' ) || has_shortcode( get_post_field( 'post_content', get_the_ID() ), 'player_statistics' ) ) {
 
-			// Include thickbox libraries.
-			add_thickbox();
+	        // Load ThickBox library if required for popups.
+	        add_thickbox();
 
-			// Needed for the ajaxify.
-			wp_enqueue_script( 'player_season_matches_ajax', DPSFS_PLUGIN_URL . 'assets/js/front.js', array( 'jquery' ), '1.2.1', false );
-			wp_localize_script( 'player_season_matches_ajax', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php?lang=' . get_bloginfo( 'language' ) ) ) );
+	        // Enqueue script with dynamic versioning based on file modification time.
+	        wp_enqueue_script(
+	            'player_season_matches_ajax',
+	            DPSFS_PLUGIN_URL . 'assets/js/front.js',
+	            array( 'jquery' ),
+	            filemtime( DPSFS_PLUGIN_DIR . 'assets/js/front.js' ),
+	            true
+	        );
 
-			// Some css code.
-			wp_enqueue_style( 'player_season_matches_ajax', DPSFS_PLUGIN_URL . 'assets/css/front.css', array(), '1.2.1' );
+	        // Localize script with ajax URL.
+	        wp_localize_script(
+	            'player_season_matches_ajax',
+	            'the_ajax_script',
+	            array(
+	                'ajaxurl' => admin_url( 'admin-ajax.php' ),
+	            )
+	        );
 
-		}
-
+	        // Enqueue style with dynamic versioning.
+	        wp_enqueue_style(
+	            'player_season_matches_style',
+	            DPSFS_PLUGIN_URL . 'assets/css/front.css',
+	            array(),
+	            filemtime( DPSFS_PLUGIN_DIR . 'assets/css/front.css' )
+	        );
+	    }
 	}
 
 }
