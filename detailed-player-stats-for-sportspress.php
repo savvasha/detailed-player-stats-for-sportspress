@@ -117,9 +117,7 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 		 */
 		private function includes() {
 			// load the needed scripts and styles.
-			if ( is_admin() || is_singular( 'sp_player' ) || has_shortcode( get_post_field( 'post_content', get_the_ID() ), 'player_statistics' ) ) {
-		        include DPSFS_PLUGIN_DIR . 'includes/class-dpsfs-scripts.php';
-		    }
+	        include DPSFS_PLUGIN_DIR . 'includes/class-dpsfs-scripts.php';
 		}
 
 		/**
