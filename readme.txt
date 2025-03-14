@@ -35,6 +35,7 @@ This plugin is an extension for [SportsPress](https://wordpress.org/plugins/spor
 
 = 1.7.2 =
 
+* FIX: Check if the value of a stat is empty and set it to 0.
 * Minor code optimization.
 
 = 1.7.1 =
