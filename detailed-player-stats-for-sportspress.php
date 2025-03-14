@@ -265,6 +265,10 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 					//$performance        = get_page_by_path( $dpsfs_show_extra_detail, 'OBJECT', 'sp_performance' );
 					//$performance_format = sp_get_post_format( $performance->ID );
 					if ( isset( $player_performance[ $dpsfs_show_extra_detail ] ) ) {
+						// Check if the value is empty and set it to 0.
+						if ( '' === $player_performance[ $dpsfs_show_extra_detail ] ) {
+							$player_performance[ $dpsfs_show_extra_detail ] = 0;
+						}
 						echo '<td class="data-stats">' . wp_kses_post( $player_performance[ $dpsfs_show_extra_detail ] ) . '</td>';
 					} else {
 						echo '<td class="data-stats"></td>';
