@@ -79,7 +79,9 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 			self::$mode = get_option( 'dpsfs_player_statistics_mode', 'popup' );
 
 			// Define constants.
-			$this->define_constants();
+			define( 'DPSFS_PLUGIN_BASE', plugin_basename( __FILE__ ) );
+			define( 'DPSFS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+			define( 'DPSFS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 			// Include required files.
 			$this->includes();
@@ -92,25 +94,6 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 			add_filter( 'sportspress_player_settings', array( $this, 'add_settings' ) );
 
 		}
-
-
-		/**
-		 * Define constants
-		 */
-		private function define_constants() {
-		    $constants = array(
-		        'DPSFS_PLUGIN_BASE' => plugin_basename( __FILE__ ),
-		        'DPSFS_PLUGIN_DIR'  => plugin_dir_path( __FILE__ ),
-		        'DPSFS_PLUGIN_URL'  => plugin_dir_url( __FILE__ ),
-		    );
-
-		    foreach ( $constants as $key => $value ) {
-		        if ( ! defined( $key ) ) {
-		            define( $key, $value );
-		        }
-		    }
-		}
-
 
 		/**
 		 * Include required files
