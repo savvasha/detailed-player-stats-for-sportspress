@@ -66,7 +66,7 @@ if ( is_array( $leagues ) ) :
 		}
 
 		if ( count( $leagues ) > 1 ) {
-			printf( '<h3 class="sp-post-caption sp-player-statistics-section">%s</h3>', wp_kses_post( $section_label ) );
+			printf( '<h3 class="sp-post-caption sp-player-statistics-section">%s</h3>', wp_kses_post( $section_label ?? '' ) );
 		}
 
 		foreach ( $leagues as $league ) :
