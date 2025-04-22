@@ -27,7 +27,7 @@ class DPSFS_Scripts {
 	 * @return void
 	 */
 	public function dpsfs_adding_scripts() {
-	    if ( is_singular( 'sp_player' ) || has_shortcode( get_post_field( 'post_content', get_the_ID() ), 'player_statistics' ) ) {
+	    if ( is_singular( 'sp_player' ) || has_shortcode( get_post_field( 'post_content', get_the_ID() ), 'player_statistics' )|| has_shortcode( get_post_field( 'post_content', get_the_ID() ), 'player' ) ) {
 
 	        // Load ThickBox library if required for popups.
 	        add_thickbox();
