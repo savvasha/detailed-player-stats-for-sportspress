@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Plugin Name: Detailed Player Stats for SportsPress
  * Description: An advanced player per season stats template.
- * Version: 1.7.2
+ * Version: 1.8.0
  * Author: Savvas
  * Author URI: https://profiles.wordpress.org/savvasha/
- * Requires at least: 5.3
+ * Requires at least: 5.9
  * Requires PHP: 7.4
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl.html
@@ -98,9 +100,9 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 		/**
 		 * Include required files
 		 */
-		private function includes() {
+		private function includes(): void {
 			// load the needed scripts and styles.
-	        include DPSFS_PLUGIN_DIR . 'includes/class-dpsfs-scripts.php';
+			include DPSFS_PLUGIN_DIR . 'includes/class-dpsfs-scripts.php';
 		}
 
 		/**
@@ -111,11 +113,11 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 		 * @param mixed $template_path The template path.
 		 * @return string
 		 */
-		public function shortcode_override( $template = null, $template_name = null, $template_path = null ) {
+		public function shortcode_override( $template = null, $template_name = null, $template_path = null ): string {
 
 			if ( 'player-statistics.php' === $template_name ) {
 				$template_path = DPSFS_PLUGIN_DIR . 'templates/';
-				$template      = $template_path . $template_name;
+				$template      = $template_path . sanitize_file_name( $template_name );
 			}
 
 			return $template;
@@ -127,40 +129,45 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 		 * @access public
 		 * @return void
 		 */
-		public function player_season_matches() {
-			if ( isset( $_REQUEST['nonce'] ) && ! wp_verify_nonce( $_REQUEST['nonce'], 'dpsfs_player_statistics_league_ajax' ) ) {
-				exit( 'Something went wrong...' );
+		public function player_season_matches(): void {
+			// Verify nonce exists and is valid.
+			if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], 'dpsfs_player_statistics_league_ajax' ) ) {
+				wp_die( 'Security check failed' );
 			}
-			if ( isset( $_REQUEST['player_id'] ) ) {
-				$this->competition_name = sanitize_text_field( $_REQUEST['competition_name'] );
-				$this->league_id        = intval( $_REQUEST['league_id'] );
-				$this->season_id        = intval( $_REQUEST['season_id'] );
-				$this->team_id          = intval( $_REQUEST['team_id'] );
-				$this->player_id        = intval( $_REQUEST['player_id'] );
 
-				if ( 'inline' === self::$mode ) {
-					$title = get_the_title( $this->player_id ) . ' @ ' . $this->competition_name;
-				} else {
-					$title = $this->competition_name;
-				}
-
-				$args = array(
-					'player'       => $this->player_id,
-					'league'       => $this->league_id,
-					'season'       => $this->season_id,
-					'team'         => $this->team_id,
-					'title'        => $title,
-					'title_format' => 'homeaway',
-					'time_format'  => 'combined',
-					'columns'      => array( 'event', 'time', 'results' ),
-					'order'        => 'ASC',
-				);
-				add_action( 'sportspress_event_list_head_row', array( $this, 'player_stats_head_row' ), 20 );
-				add_action( 'sportspress_event_list_row', array( $this, 'player_stats_body_row' ), 20, 2 );
-				sp_get_template( 'event-list.php', $args );
-
-				wp_die();
+			// Validate required parameters exist.
+			if ( ! isset( $_REQUEST['player_id'], $_REQUEST['league_id'], $_REQUEST['season_id'], $_REQUEST['team_id'] ) ) {
+				wp_die( 'Missing required parameters' );
 			}
+
+			$this->competition_name = sanitize_text_field( $_REQUEST['competition_name'] ?? '' );
+			$this->league_id        = intval( $_REQUEST['league_id'] );
+			$this->season_id        = intval( $_REQUEST['season_id'] );
+			$this->team_id          = intval( $_REQUEST['team_id'] );
+			$this->player_id        = intval( $_REQUEST['player_id'] );
+
+			if ( 'inline' === self::$mode ) {
+				$title = get_the_title( $this->player_id ) . ' @ ' . $this->competition_name;
+			} else {
+				$title = $this->competition_name;
+			}
+
+			$args = array(
+				'player'       => $this->player_id,
+				'league'       => $this->league_id,
+				'season'       => $this->season_id,
+				'team'         => $this->team_id,
+				'title'        => $title,
+				'title_format' => 'homeaway',
+				'time_format'  => 'combined',
+				'columns'      => array( 'event', 'time', 'results' ),
+				'order'        => 'ASC',
+			);
+			add_action( 'sportspress_event_list_head_row', array( $this, 'player_stats_head_row' ), 20 );
+			add_action( 'sportspress_event_list_row', array( $this, 'player_stats_body_row' ), 20, 2 );
+			sp_get_template( 'event-list.php', $args );
+
+			wp_die();
 		}
 
 		/**
@@ -170,7 +177,7 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 		 * @param mixed $usecolumns The columns that are used.
 		 * @return void
 		 */
-		public function player_stats_head_row( $usecolumns ) {
+		public function player_stats_head_row( $usecolumns ): void {
 			
 			if ( 'yes' === get_option( 'dpsfs_show_day', 'no' ) ) {
 				echo '<th class="data-day">' . esc_html__( 'Match Day', 'sportspress' ) . '</th>';
@@ -192,7 +199,9 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 			if ( $dpsfs_show_extra_details ) {
 				$performance_labels = sp_get_var_labels( 'sp_performance' );
 				foreach ( $dpsfs_show_extra_details as $dpsfs_show_extra_detail ) {
-					echo '<th class="data-' . esc_attr( $dpsfs_show_extra_detail ) . '">' . esc_html__( $performance_labels[ $dpsfs_show_extra_detail ], 'sportspress' ) . '</th>';
+					if ( isset( $performance_labels[ $dpsfs_show_extra_detail ] ) ) {
+						echo '<th class="data-' . esc_attr( $dpsfs_show_extra_detail ) . '">' . esc_html__( $performance_labels[ $dpsfs_show_extra_detail ], 'sportspress' ) . '</th>';
+					}
 				}
 			}
 
@@ -206,7 +215,7 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 		 * @param mixed  $usecolumns The columns that are used.
 		 * @return void
 		 */
-		public function player_stats_body_row( $event, $usecolumns ) {
+		public function player_stats_body_row( $event, $usecolumns ): void {
 			
 			if ( 'yes' === get_option( 'dpsfs_show_day', 'no' ) ) {
 				echo '<td class="data-stats">';
@@ -244,9 +253,6 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 				$event_performance  = $working_event->performance();
 				$player_performance = sp_array_value( sp_array_value( $event_performance, $this->team_id, array() ), $this->player_id, array() );
 				foreach ( $dpsfs_show_extra_details as $dpsfs_show_extra_detail ) {
-					// Get the performance object so as to check what format it is (Number, Equation etc...).
-					//$performance        = get_page_by_path( $dpsfs_show_extra_detail, 'OBJECT', 'sp_performance' );
-					//$performance_format = sp_get_post_format( $performance->ID );
 					if ( isset( $player_performance[ $dpsfs_show_extra_detail ] ) ) {
 						// Check if the value is empty and set it to 0.
 						if ( '' === $player_performance[ $dpsfs_show_extra_detail ] ) {
@@ -267,9 +273,9 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 		 * @param integer $player_id The Player ID.
 		 * @param integer $match_id The Match ID.
 		 * @param integer $team_id The Team ID.
-		 * @return string
+		 * @return string|null
 		 */
-		private function get_player_match_performance( $player_id, $match_id = null, $team_id = null ) {
+		private function get_player_match_performance( int $player_id, ?int $match_id = null, ?int $team_id = null ): ?string {
 			$player_match_performance = null;
 			$team_performance         = (array) get_post_meta( $match_id, 'sp_players', true );
 
@@ -283,6 +289,12 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 						if ( in_array( $key, array( 'sub', 'status', 'number', 'position' ), true ) ) {
 							continue;
 						}
+						
+						// Validate key format to prevent potential issues.
+						if ( ! preg_match( '/^[a-zA-Z0-9_-]+$/', $key ) ) {
+							continue;
+						}
+						
 						$performance_id = 0;
 						$post           = get_page_by_path( $key, OBJECT, 'sp_performance' );
 						if ( $post ) {
@@ -312,7 +324,7 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 		 * @param integer $team_id The Team ID.
 		 * @return integer
 		 */
-		private function get_player_match_minutes( $player_id, $match_id = null, $team_id = null ) {
+		private function get_player_match_minutes( int $player_id, ?int $match_id = null, ?int $team_id = null ): int {
 			$team_performance = (array) get_post_meta( $match_id, 'sp_players', true );
 			$timeline         = (array) get_post_meta( $match_id, 'sp_timeline', true );
 			$sendoffs         = array();
@@ -443,7 +455,7 @@ if ( ! class_exists( 'Detailed_Player_Stats_For_SportsPress' ) ) :
 		 * @param mixed $settings The SportsPress settings array.
 		 * @return array
 		 */
-		public function add_settings( $settings ) {
+		public function add_settings( $settings ): array {
 
 			$dpsfs_show_extra_details = array();
 
