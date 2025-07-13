@@ -3,7 +3,7 @@ Contributors: savvasha
 Tags: sportspress, players, season, events, statistics
 Requires at least: 5.9
 Tested up to: 6.8
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -32,6 +32,11 @@ This plugin is an extension for [SportsPress](https://wordpress.org/plugins/spor
 4.  Display performances and minutes option in SportsPress Players Settings page
 
 == Changelog ==
+
+= 1.8.1 =
+
+* Fix escaping.
+
 
 = 1.8.0 =
 

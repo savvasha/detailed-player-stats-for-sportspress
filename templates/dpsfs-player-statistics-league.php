@@ -59,7 +59,7 @@ foreach ( $labels as $key => $label ) :
 	if ( isset( $hide_teams ) && 'team' === $key ) {
 		continue;
 	}
-	$output .= '<th class="data-' . esc_attr( $key ) . '">' . esc_html( $label ) . '</th>';
+	$output .= '<th class="data-' . esc_attr( $key ) . '">' . wp_kses_post( $label ) . '</th>';
 endforeach;
 
 $output .= '</tr> </thead> <tbody>';
@@ -142,7 +142,7 @@ $season_frac  = 10 * ( $season_id - (int) $season_id );
 		} elseif ( isset( $hide_teams ) && 'team' === $key ) {
 			continue;
 		} else {
-			$output .= '<td class="data-' . esc_attr( $key ) . ( -1 === $season_id ? ' sp-highlight' : '' ) . '">' . esc_html( sp_array_value( $row, $key, '' ) ) . '</td>';
+			$output .= '<td class="data-' . esc_attr( $key ) . ( -1 === $season_id ? ' sp-highlight' : '' ) . '">' . wp_kses_post( sp_array_value( $row, $key, '' ) ) . '</td>';
 		}
 	endforeach;
 
