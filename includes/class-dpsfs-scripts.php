@@ -104,13 +104,14 @@ class DPSFS_Scripts {
 			true
 		);
 
-		// Localize script with AJAX URL and nonce.
+		// Localize script with AJAX URL, nonce, and admin URL for loading image.
 		wp_localize_script(
 			self::SCRIPT_HANDLE,
 			'the_ajax_script',
 			array(
 				'ajaxurl' => admin_url( 'admin-ajax.php' ),
 				'nonce'   => wp_create_nonce( 'dpsfs_player_statistics_league_ajax' ),
+				'adminUrl' => admin_url(),
 			)
 		);
 	}

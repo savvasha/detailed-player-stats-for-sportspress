@@ -15,7 +15,7 @@ jQuery(document).ready(function($) {
 		//Show loading info till ajax response is ready
 		var original_button_text = $(this).text()
 		var $this = $(this);
-		$this.html('<img src="/wp-admin/images/loading.gif" alt="loading.gif"/>');
+		$this.html('<img src="' + the_ajax_script.adminUrl + 'images/loading.gif" alt="loading.gif"/>');
 		
 		//Call player_season_matches() function and return the response to div#player_events and from there to thickbox
 		var ajax_call = $.ajax({

@@ -3,7 +3,7 @@ Contributors: savvasha
 Tags: sportspress, players, season, events, statistics
 Requires at least: 5.9
 Tested up to: 6.8
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -32,6 +32,12 @@ This plugin is an extension for [SportsPress](https://wordpress.org/plugins/spor
 4.  Display performances and minutes option in SportsPress Players Settings page
 
 == Changelog ==
+
+= 1.8.2 =
+
+* FIX: Loading image not found issue when plugin is used on different domains or subdirectories.
+* IMPROVEMENT: Use dynamic admin URL instead of hardcoded path for loading GIF.
+* FIX: CSS styling issue in loading indicator template.
 
 = 1.8.1 =
 
