@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Player Statistics (Advanced) template for Single League
  * This template is modified copy from sportspress/templates/player-statistics-league.php
@@ -25,6 +27,11 @@ if( $dpsfs_current_theme->exists() && $dpsfs_current_theme->parent() ){
 // Get the detailed stats mode from settings.
 $dpsfs_mode = get_option( 'dpsfs_player_statistics_mode', 'popup' );
 
+// Validate required parameters.
+if ( ! isset( $data ) || ! is_array( $data ) || empty( $data ) ) {
+	return;
+}
+
 // The first row should be column labels.
 $labels = $data[0];
 
@@ -38,12 +45,12 @@ if ( empty( $data ) ) {
 
 if ( 'Alchemists' === $dpsfs_theme_name ) {
 	$output = '<div class="card card--has-table">';
-	$output .= '<div class="card__header">' . '<h4>' . $caption . '</h4>' . '</div>';
+	$output .= '<div class="card__header">' . '<h4>' . esc_html( $caption ) . '</h4>' . '</div>';
 		$output .= '<div class="card__content">' .
 		'<div class="table-wrapper ' . ( $scrollable ? ' table-responsive' : '' ) . '">' .
 		'<table class="table table-hover player-league">' . '<thead>' . '<tr>';	
 } else {
-	$output = '<h4 class="sp-table-caption">' . $caption . '</h4>' .
+	$output = '<h4 class="sp-table-caption">' . esc_html( $caption ) . '</h4>' .
 		'<div class="sp-table-wrapper">' .
 		'<table class="sp-player-statistics sp-data-table' . ( $scrollable ? ' sp-scrollable-table' : '' ) . '"> <thead> <tr>';
 }
@@ -52,7 +59,7 @@ foreach ( $labels as $key => $label ) :
 	if ( isset( $hide_teams ) && 'team' === $key ) {
 		continue;
 	}
-	$output .= '<th class="data-' . $key . '">' . $label . '</th>';
+	$output .= '<th class="data-' . esc_attr( $key ) . '">' . esc_html( $label ) . '</th>';
 endforeach;
 
 $output .= '</tr> </thead> <tbody>';
@@ -101,18 +108,41 @@ $season_frac  = 10 * ( $season_id - (int) $season_id );
 				$team_id       = (int) explode( $search_text, $matches[ $correct_index ] )[1];
 			}
 		} else {
-			$team_object = get_page_by_title( wp_strip_all_tags( $row['team'] ), OBJECT, 'sp_team' );
-			$team_id     = $team_object->ID;
+			// Validate and sanitize team data before database query.
+			$team_name = isset( $row['team'] ) ? sanitize_text_field( $row['team'] ) : '';
+			if ( ! empty( $team_name ) ) {
+				$team_query = new WP_Query( array(
+					'post_type' => 'sp_team',
+					'post_status' => 'publish',
+					'title' => $team_name,
+					'posts_per_page' => 1,
+				) );
+				if ( $team_query->have_posts() ) {
+					$team_query->the_post();
+					$team_id = get_the_ID();
+					wp_reset_postdata();
+				}
+			}
 		}
 	}
 
 	foreach ( $labels as $key => $value ) :
 		if ( 'name' === $key && -1 !== $season_id && ! $show_career_totals ) {
-			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><button data-season_id="' . (int) $season_id . '" data-league_id="' . $league_id . '" data-player_id="' . $player_id . '" data-team_id="' . $team_id . '" data-nonce="' . $nonce . '" data-competition_name="' . $competition_name . '" data-player_name="' . esc_html( get_the_title( $player_id ) ) . '" class="player-season-stats-' . $dpsfs_mode . '">' . sp_array_value( $row, $key, '' ) . '</button></td>';
+			$season_id_escaped = esc_attr( (string) $season_id );
+			$league_id_escaped = esc_attr( (string) $league_id );
+			$player_id_escaped = esc_attr( (string) $player_id );
+			$team_id_escaped = esc_attr( (string) $team_id );
+			$nonce_escaped = esc_attr( $nonce );
+			$competition_name_escaped = esc_attr( $competition_name );
+			$player_name_escaped = esc_attr( get_the_title( $player_id ) );
+			$dpsfs_mode_escaped = esc_attr( $dpsfs_mode );
+			$row_value_escaped = esc_html( sp_array_value( $row, $key, '' ) );
+			
+			$output .= '<td class="data-' . esc_attr( $key ) . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><button data-season_id="' . $season_id_escaped . '" data-league_id="' . $league_id_escaped . '" data-player_id="' . $player_id_escaped . '" data-team_id="' . $team_id_escaped . '" data-nonce="' . $nonce_escaped . '" data-competition_name="' . $competition_name_escaped . '" data-player_name="' . $player_name_escaped . '" class="player-season-stats-' . $dpsfs_mode_escaped . '">' . $row_value_escaped . '</button></td>';
 		} elseif ( isset( $hide_teams ) && 'team' === $key ) {
 			continue;
 		} else {
-			$output .= '<td class="data-' . $key . ( -1 === $season_id ? ' sp-highlight' : '' ) . '">' . sp_array_value( $row, $key, '' ) . '</td>';
+			$output .= '<td class="data-' . esc_attr( $key ) . ( -1 === $season_id ? ' sp-highlight' : '' ) . '">' . esc_html( sp_array_value( $row, $key, '' ) ) . '</td>';
 		}
 	endforeach;
 

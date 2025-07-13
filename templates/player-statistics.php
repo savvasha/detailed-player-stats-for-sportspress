@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Player Statistics (Advanced) template
  * This template is modified copy from sportspress/templates/player-statistics.php
@@ -11,13 +13,22 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
+
 if ( 'no' === get_option( 'sportspress_player_show_statistics', 'yes' ) && 'no' === get_option( 'sportspress_player_show_total', 'no' ) ) {
 	return;
 }
 
+// Validate and sanitize the player ID.
 if ( ! isset( $id ) ) {
 	$id = get_the_ID();
 }
+
+// Ensure we have a valid player ID.
+if ( ! $id || ! is_numeric( $id ) ) {
+	return;
+}
+
+$id = (int) $id;
 
 $player = new SP_Player( $id );
 
