@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 /**
  * Player Statistics (Advanced) template
  * This template is modified copy from sportspress/templates/player-statistics.php
@@ -9,6 +7,14 @@ declare(strict_types=1);
  * @package     detailed-player-stats-for-sportspress/templates
  * @version   2.6.1
  */
+
+declare(strict_types=1);
+
+// This is a SportsPress template rendered via sp_get_template(), which extracts
+// its arguments and includes the file inside a function scope. The variables
+// here therefore live in that loader scope, not the global scope, so the
+// global-prefix / global-override sniffs do not apply to this file.
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals, WordPress.WP.GlobalVariablesOverride
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -43,7 +49,13 @@ foreach ( $leagues as $key => $league ) {
 	$leagues[ $key ]->sp_order = get_term_meta( $league->term_id, 'sp_order', true );
 }
 
-// Make the sorting of leagues based on "order" values set by user.
+/**
+ * Sort leagues by their user-defined "order" value.
+ *
+ * @param object $a First league term.
+ * @param object $b Second league term.
+ * @return int
+ */
 function dpsfs_sort_by_order( $a, $b ) {
 	return (int) $a->sp_order - (int) $b->sp_order;
 }
@@ -63,7 +75,7 @@ if ( 1 === $sections ) {
 		1 => esc_attr__( 'Defense', 'sportspress' ),
 		0 => esc_attr__( 'Offense', 'sportspress' ),
 	);
-} elseif ( 0 == $sections ) {
+} elseif ( 0 === $sections ) {
 	$section_order = array( esc_attr__( 'Offense', 'sportspress' ), esc_attr__( 'Defense', 'sportspress' ) );
 } else {
 	$section_order = array( -1 => null );
@@ -72,7 +84,7 @@ if ( 1 === $sections ) {
 // Loop through statistics for each league.
 if ( is_array( $leagues ) ) :
 	foreach ( $section_order as $section_id => $section_label ) {
-		if ( -1 !== $section_id && ! empty( $player_sections ) && ! in_array( $section_id, $player_sections ) ) {
+		if ( -1 !== $section_id && ! empty( $player_sections ) && ! in_array( $section_id, $player_sections ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- Section ids may be ints or numeric strings in term meta; loose match is intended (mirrors SportsPress core).
 			continue;
 		}
 

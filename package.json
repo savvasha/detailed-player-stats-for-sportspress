@@ -1,0 +1,21 @@
+{
+	"name": "detailed-player-stats-for-sportspress",
+	"version": "1.8.3",
+	"description": "Linting tooling for Detailed Player Stats for SportsPress.",
+	"private": true,
+	"author": "Savvas",
+	"license": "GPL-2.0-or-later",
+	"scripts": {
+		"lint:js": "eslint assets/js",
+		"lint:js:fix": "eslint assets/js --fix",
+		"lint:css": "stylelint \"assets/css/**/*.css\"",
+		"lint:css:fix": "stylelint \"assets/css/**/*.css\" --fix"
+	},
+	"devDependencies": {
+		"@wordpress/eslint-plugin": "^27.0.0",
+		"@wordpress/stylelint-config": "^26.0.0",
+		"eslint": "^9.0.0",
+		"stylelint": "^17.14.1",
+		"stylelint-scss": "^7.2.0"
+	}
+}

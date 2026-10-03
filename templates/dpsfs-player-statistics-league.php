@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 /**
  * Player Statistics (Advanced) template for Single League
  * This template is modified copy from sportspress/templates/player-statistics-league.php
@@ -10,19 +8,27 @@ declare(strict_types=1);
  * @version   2.5
  */
 
+declare(strict_types=1);
+
+// This is a SportsPress template rendered via sp_get_template(), which extracts
+// its arguments and includes the file inside a function scope. The variables
+// here therefore live in that loader scope, not the global scope, so the
+// global-prefix / global-override sniffs do not apply to this file.
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals, WordPress.WP.GlobalVariablesOverride
+
 // Protection from certain types of misuse, malicious or otherwise of ajax callings.
 $nonce = wp_create_nonce( 'dpsfs_player_statistics_league_ajax' );
 
 // Get the current theme.
 $dpsfs_current_theme = wp_get_theme();
-if( $dpsfs_current_theme->exists() && $dpsfs_current_theme->parent() ){
+if ( $dpsfs_current_theme->exists() && $dpsfs_current_theme->parent() ) {
 	$dpsfs_parent_theme = $dpsfs_current_theme->parent();
 
-	if( $dpsfs_parent_theme->exists() ){
-		$dpsfs_theme_name = $dpsfs_parent_theme->get('Name');
+	if ( $dpsfs_parent_theme->exists() ) {
+		$dpsfs_theme_name = $dpsfs_parent_theme->get( 'Name' );
 	}
-} elseif( $dpsfs_current_theme->exists() ) {
-	$dpsfs_theme_name = $dpsfs_current_theme->get('Name');
+} elseif ( $dpsfs_current_theme->exists() ) {
+	$dpsfs_theme_name = $dpsfs_current_theme->get( 'Name' );
 }
 // Get the detailed stats mode from settings.
 $dpsfs_mode = get_option( 'dpsfs_player_statistics_mode', 'popup' );
@@ -44,11 +50,11 @@ if ( empty( $data ) ) {
 }
 
 if ( 'Alchemists' === $dpsfs_theme_name ) {
-	$output = '<div class="card card--has-table">';
-	$output .= '<div class="card__header">' . '<h4>' . esc_html( $caption ) . '</h4>' . '</div>';
+	$output      = '<div class="card card--has-table">';
+	$output     .= '<div class="card__header"><h4>' . esc_html( $caption ) . '</h4></div>';
 		$output .= '<div class="card__content">' .
 		'<div class="table-wrapper ' . ( $scrollable ? ' table-responsive' : '' ) . '">' .
-		'<table class="table table-hover player-league">' . '<thead>' . '<tr>';	
+		'<table class="table table-hover player-league"><thead><tr>';
 } else {
 	$output = '<h4 class="sp-table-caption">' . esc_html( $caption ) . '</h4>' .
 		'<div class="sp-table-wrapper">' .
@@ -69,8 +75,8 @@ $i = 0;
 $player_assignments = get_post_meta( $player_id, 'sp_assignments', false );
 
 foreach ( $data as $season_id => $row ) :
-// Get the decimal value of midseason and convert it to integer (i.e. from 0.2 get 2) Compatible only with single digit decimals.
-$season_frac  = 10 * ( $season_id - (int) $season_id );
+	// Get the decimal value of midseason and convert it to integer (i.e. from 0.2 get 2) Compatible only with single digit decimals.
+	$season_frac = 10 * ( $season_id - (int) $season_id );
 
 	$output .= '<tr class="' . ( 0 === $i % 2 ? 'odd' : 'even' ) . '">';
 
@@ -92,12 +98,12 @@ $season_frac  = 10 * ( $season_id - (int) $season_id );
 
 	$team_id = null;
 	if ( -1 !== $season_id && ! $show_career_totals ) {
-		
+
 		if ( $player_assignments ) {
 			$search_text = $league_id . '_' . (int) $season_id . '_';
 			$matches     = array_filter(
 				$player_assignments,
-				function( $el ) use ( $search_text ) {
+				function ( $el ) use ( $search_text ) {
 					return ( strpos( $el, $search_text ) !== false );
 				}
 			);
@@ -111,12 +117,14 @@ $season_frac  = 10 * ( $season_id - (int) $season_id );
 			// Validate and sanitize team data before database query.
 			$team_name = isset( $row['team'] ) ? sanitize_text_field( $row['team'] ) : '';
 			if ( ! empty( $team_name ) ) {
-				$team_query = new WP_Query( array(
-					'post_type' => 'sp_team',
-					'post_status' => 'publish',
-					'title' => $team_name,
-					'posts_per_page' => 1,
-				) );
+				$team_query = new WP_Query(
+					array(
+						'post_type'      => 'sp_team',
+						'post_status'    => 'publish',
+						'title'          => $team_name,
+						'posts_per_page' => 1,
+					)
+				);
 				if ( $team_query->have_posts() ) {
 					$team_query->the_post();
 					$team_id = get_the_ID();
@@ -128,16 +136,16 @@ $season_frac  = 10 * ( $season_id - (int) $season_id );
 
 	foreach ( $labels as $key => $value ) :
 		if ( 'name' === $key && -1 !== $season_id && ! $show_career_totals ) {
-			$season_id_escaped = esc_attr( (string) $season_id );
-			$league_id_escaped = esc_attr( (string) $league_id );
-			$player_id_escaped = esc_attr( (string) $player_id );
-			$team_id_escaped = esc_attr( (string) $team_id );
-			$nonce_escaped = esc_attr( $nonce );
+			$season_id_escaped        = esc_attr( (string) $season_id );
+			$league_id_escaped        = esc_attr( (string) $league_id );
+			$player_id_escaped        = esc_attr( (string) $player_id );
+			$team_id_escaped          = esc_attr( (string) $team_id );
+			$nonce_escaped            = esc_attr( $nonce );
 			$competition_name_escaped = esc_attr( $competition_name );
-			$player_name_escaped = esc_attr( get_the_title( $player_id ) );
-			$dpsfs_mode_escaped = esc_attr( $dpsfs_mode );
-			$row_value_escaped = esc_html( sp_array_value( $row, $key, '' ) );
-			
+			$player_name_escaped      = esc_attr( get_the_title( $player_id ) );
+			$dpsfs_mode_escaped       = esc_attr( $dpsfs_mode );
+			$row_value_escaped        = esc_html( sp_array_value( $row, $key, '' ) );
+
 			$output .= '<td class="data-' . esc_attr( $key ) . ( -1 === $season_id ? ' sp-highlight' : '' ) . '"><button data-season_id="' . $season_id_escaped . '" data-league_id="' . $league_id_escaped . '" data-player_id="' . $player_id_escaped . '" data-team_id="' . $team_id_escaped . '" data-nonce="' . $nonce_escaped . '" data-competition_name="' . $competition_name_escaped . '" data-player_name="' . $player_name_escaped . '" class="player-season-stats-' . $dpsfs_mode_escaped . '">' . $row_value_escaped . '</button></td>';
 		} elseif ( isset( $hide_teams ) && 'team' === $key ) {
 			continue;
@@ -148,12 +156,12 @@ $season_frac  = 10 * ( $season_id - (int) $season_id );
 
 	$output .= '</tr>';
 
-	$i++;
+	++$i;
 
 endforeach;
 if ( 'Alchemists' === $dpsfs_theme_name ) {
 	$output .= '</tbody> </table> </div> </div> </div>';
-}else{
+} else {
 	$output .= '</tbody> </table> </div>';
 }
 ?>

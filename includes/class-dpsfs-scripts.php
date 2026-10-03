@@ -1,11 +1,15 @@
 <?php
-declare(strict_types=1);
-
 /**
  * Scripts functionality
  *
- * @package Detailed Player Stats for SportsPress
+ * @package detailed-player-stats-for-sportspress
  * @author Savvas
+ */
+
+declare(strict_types=1);
+
+/**
+ * Handles enqueuing of the front-end scripts and styles.
  */
 class DPSFS_Scripts {
 
@@ -86,7 +90,7 @@ class DPSFS_Scripts {
 
 		// Check if script file exists.
 		if ( ! file_exists( $script_path ) ) {
-			error_log( 'DPSFS: Script file not found: ' . $script_path );
+			error_log( 'DPSFS: Script file not found: ' . $script_path ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Logs a genuine misconfiguration (missing bundled asset).
 			return;
 		}
 
@@ -109,8 +113,8 @@ class DPSFS_Scripts {
 			self::SCRIPT_HANDLE,
 			'the_ajax_script',
 			array(
-				'ajaxurl' => admin_url( 'admin-ajax.php' ),
-				'nonce'   => wp_create_nonce( 'dpsfs_player_statistics_league_ajax' ),
+				'ajaxurl'  => admin_url( 'admin-ajax.php' ),
+				'nonce'    => wp_create_nonce( 'dpsfs_player_statistics_league_ajax' ),
 				'adminUrl' => admin_url(),
 			)
 		);
@@ -127,7 +131,7 @@ class DPSFS_Scripts {
 
 		// Check if style file exists.
 		if ( ! file_exists( $style_path ) ) {
-			error_log( 'DPSFS: Style file not found: ' . $style_path );
+			error_log( 'DPSFS: Style file not found: ' . $style_path ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Logs a genuine misconfiguration (missing bundled asset).
 			return;
 		}
 

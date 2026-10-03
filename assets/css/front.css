@@ -6,6 +6,7 @@
 	max-width: 90%;
 	margin: 0 !important;
 }
+
 #TB_ajaxContent {
 	width: 100% !important;
 	height: auto;
@@ -23,18 +24,20 @@
 }
 
 @keyframes dashicons-spin {
+
 	0% {
-		transform: rotate( 0deg );
+		transform: rotate(0deg);
 	}
+
 	100% {
-		transform: rotate( 360deg );
+		transform: rotate(360deg);
 	}
 }
 
 .player-details-close-button {
 	position: relative;
-	color: red;
+	color: #f00;
 	top: 45px;
-	float:right;
+	float: right;
 	z-index: 99999;
 }
